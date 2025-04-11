@@ -57,9 +57,9 @@ final class FeedController: UIViewController {
 
     // MARK: - Initializer
 
-    init(userViewModel: UserViewModel, logoutUseCase: LogoutUseCaseProtocol, router: MainTabBarRouterProtocol) {
+    init(userViewModel: UserViewModel, logoutUseCase: LogoutUseCaseProtocol, router: MainTabBarRouterProtocol, repository: TweetRepositoryProtocol) {
         self.userViewModel = userViewModel
-        self.viewModel = FeedViewModel(logoutUseCase: logoutUseCase)
+        self.viewModel = FeedViewModel(logoutUseCase: logoutUseCase, repository: repository)
         self.router = router
         super.init(nibName: nil, bundle: nil)
     }
@@ -169,6 +169,7 @@ final class FeedController: UIViewController {
         self.present(alertController, animated: true)
     }
 
+
     // MARK: - Bind ViewModels
 
     private func bindViewModel() {
@@ -176,7 +177,7 @@ final class FeedController: UIViewController {
         viewModel.onLogutSuccess = { [weak self] in
             guard let self else { return }
             DispatchQueue.main.async {
-                self.router.logout()
+                self.router.logout(from: self)
             }
         }
 
@@ -186,6 +187,22 @@ final class FeedController: UIViewController {
                 self.authErrorAlert(message: message)
             }
         }
+
+        viewModel.onFetchTweetsSuccess = { [weak self] in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+
+        viewModel.onFetchTweetFail = { [weak self] error in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.authErrorAlert(message: error.localizedDescription)
+            }
+        }
+
+        viewModel.fetchAllTweets()
     }
 
 
@@ -200,13 +217,16 @@ final class FeedController: UIViewController {
 
 extension FeedController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return viewModel.allTweets.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifier.tweetCell, for: indexPath) as? TweetCell else {
             return UICollectionViewCell()
         }
+
+        let tweetViewModel = TweetViewModel(tweet: viewModel.allTweets[indexPath.row])
+        cell.viewModel = tweetViewModel
         return cell
     }
 }
@@ -221,3 +241,15 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+
+#Preview {
+
+    let mockUserViewModel = UserViewModel(user: MockUserModel(bio: "test"))
+    let mockLogoutUseCase = MockLogoutUseCase()
+    let mockRouter = MockMainTabRouter()
+    let mockRepository = MockTweetRepository()
+
+    VCPreView {
+        UINavigationController(rootViewController: FeedController(userViewModel: mockUserViewModel, logoutUseCase: mockLogoutUseCase, router: mockRouter, repository: mockRepository))
+    }
+}

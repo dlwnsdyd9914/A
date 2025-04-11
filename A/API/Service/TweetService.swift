@@ -40,4 +40,23 @@ final class TweetService {
             completion(.success(()))
         }
     }
+
+    func fetchAllTweets(completion: @escaping (Result<Tweet, TweetServiceError>) -> Void) {
+
+        FirebasePath.tweets.observe(.childAdded) { snapshot in
+            let tweetId = snapshot.key
+            guard let tweetValue = snapshot.value as? [String: Any],
+                  let userUid = tweetValue["uid"] as? String else { return }
+
+            UserFactory.fetchUser(uid: userUid) { result in
+                switch result {
+                case .success(let user):
+                    let tweet = Tweet(tweetId: tweetId, dictionary: tweetValue, user: user)
+                    completion(.success(tweet))
+                case .failure(let error):
+                    completion(.failure(.failedToFetch))
+                }
+            }
+        }
+    }
 }

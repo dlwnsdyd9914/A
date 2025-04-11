@@ -7,13 +7,20 @@
 
 import UIKit
 import Kingfisher
+import SnapKit
 import Then
 
 final class TweetCell: UICollectionViewCell {
 
-    // MARK: - Properties
 
     // MARK: - View Models
+    var viewModel: TweetViewModelProtocol? {
+        didSet {
+            guard let viewModel else { return }
+            bindViewModel(viewModel: viewModel)
+        }
+    }
+
 
     // MARK: - UI Components
 
@@ -180,6 +187,13 @@ final class TweetCell: UICollectionViewCell {
     // MARK: - Functions
 
     // MARK: - Bind ViewModels
+
+    private func bindViewModel(viewModel: TweetViewModelProtocol) {
+        infoLabel.attributedText = viewModel.infoLabel
+        captionLabel.text = viewModel.caption
+        profileImageView.kf.setImage(with: viewModel.profileImageUrl)
+
+    }
 
 
 

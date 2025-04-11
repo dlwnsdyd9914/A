@@ -6,12 +6,23 @@
 //
 
 import UIKit
+import Then
+import SnapKit
+import Kingfisher
+import SwiftUI
 
 final class UploadTweetController: UIViewController {
 
     // MARK: - Properties
 
+    private let router: UploadTweetRouterProtocol
+
+
     // MARK: - View Models
+
+    private let userViewModel: UserViewModel
+
+    private let viewModel: UploadTweetViewModel
 
     // MARK: - UI Components
 
@@ -27,16 +38,18 @@ final class UploadTweetController: UIViewController {
         $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = .boldSystemFont(ofSize: 14)
         $0.backgroundColor = .backGround
+        $0.clipsToBounds = true
         $0.addTarget(self, action: #selector(handleUploadTweetButtonTapped), for: .touchUpInside)
-        $0.translatesAutoresizingMaskIntoConstraints = false
     }
 
-    private let profileImageView = UIImageView().then { imageView in
-        imageView.backgroundColor = .lightGray
+    private let profileImageView = UIImageView().then {
+        $0.backgroundColor = .lightGray
+        $0.clipsToBounds = true
     }
 
     private lazy var captionTextView = InputTextView().then {
-        $0.backgroundColor = .brown
+        $0.backgroundColor = .clear
+        $0.delegate = self
     }
 
     private let replyLabel = UILabel().then {
@@ -47,6 +60,17 @@ final class UploadTweetController: UIViewController {
 
     // MARK: - Initializer
 
+    init(router: UploadTweetRouterProtocol, userViewModel: UserViewModel, useCase: UploadTweetUseCaseProtocol){
+        self.router = router
+        self.userViewModel = userViewModel
+        self.viewModel = UploadTweetViewModel(tweetUploadUseCase: useCase)
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("")
+    }
+
     // MARK: - Life Cycles
 
     override func viewDidLoad() {
@@ -55,16 +79,24 @@ final class UploadTweetController: UIViewController {
         configureNavigationBar()
         addSubViews()
         configureConstraints()
+        setProfileImageView(userViewModel: userViewModel)
+        bindViewModel()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        uploadTweetButton.layer.cornerRadius = uploadTweetButton.frame.height / 2
+        profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
     }
 
     // MARK: - Selectors
 
     @objc private func handleCancleButtonTapped() {
-        
+        router.dismiss(from: self)
     }
 
     @objc private func handleUploadTweetButtonTapped() {
-
+        viewModel.uploadTweet()
     }
 
     // MARK: - UI Configurations
@@ -74,17 +106,15 @@ final class UploadTweetController: UIViewController {
     }
 
     private func configureNavigationBar() {
-
-
-
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancleButton)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: uploadTweetButton)
+        navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBar.setDefaultAppearance()
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancleButton)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: uploadTweetButton)
     }
 
     private func addSubViews() {
-        self.view.addSubview(profileImageView)
-        self.view.addSubview(captionTextView)
-        self.view.addSubview(replyLabel)
+        view.addSubview(profileImageView)
+        view.addSubview(captionTextView)
+        view.addSubview(replyLabel)
     }
 
     private func configureConstraints() {
@@ -105,7 +135,7 @@ final class UploadTweetController: UIViewController {
     private func setCaptionTextViewConstraints() {
         captionTextView.snp.makeConstraints({
             $0.top.equalTo(profileImageView.snp.top)
-            $0.leading.equalTo(profileImageView.snp.trailing).inset(16)
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(16)
             $0.trailing.equalToSuperview().inset(16)
         })
     }
@@ -124,11 +154,59 @@ final class UploadTweetController: UIViewController {
         })
     }
 
-
     // MARK: - Functions
+
+    private func authErrorAlert(message: String) {
+        let alert = UIAlertController(title: "오류", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .default)
+        alert.addAction(okAction)
+        self.present(alert, animated: true)
+    }
 
     // MARK: - Bind ViewModels
 
+    private func bindViewModel() {
+        viewModel.onCaptionText = { [weak self] caption in
+            guard let self else { return }
+            self.captionTextView.text = caption
+        }
 
+        viewModel.onTweetUploadFail = { [weak self] errorMessage in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.authErrorAlert(message: errorMessage)
+            }
+        }
 
+        viewModel.onTweetUploadSuccess = { [weak self] in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.router.dismiss(from: self)
+            }
+        }
+    }
+
+    private func setProfileImageView(userViewModel: UserViewModel) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.profileImageView.kf.setImage(with: userViewModel.profileImageUrl)
+        }
+    }
+}
+
+extension UploadTweetController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        viewModel.bindCaption(text: textView.text)
+    }
+}
+
+#Preview {
+
+    let mockRouter = MockUploadRouter()
+    let mockUserViewModel = UserViewModel(user: MockUserModel(bio: "Test"))
+    let mockUseCase = MockUploadTweetUseCase()
+
+    VCPreView {
+        UINavigationController(rootViewController: UploadTweetController(router: mockRouter, userViewModel: mockUserViewModel, useCase: mockUseCase))
+    }.edgesIgnoringSafeArea(.all)
 }

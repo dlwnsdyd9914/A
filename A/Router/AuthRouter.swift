@@ -25,7 +25,7 @@ final class AuthRouter: AuthRouterProtocol {
         switch destination {
         case .login:
             guard let mainTabRouter = mainTabRouter else { return }
-            let mainTabController = MainTabController(userRepository: diContainer.makeUserRepository(), logoutUseCase: diContainer.makeLogoutUseCase(), router: mainTabRouter)
+            let mainTabController = MainTabController(diContainer: diContainer, router: mainTabRouter)
             mainTabController.modalPresentationStyle = .fullScreen
             viewController.present(mainTabController, animated: true)
         case .register:

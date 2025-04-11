@@ -23,11 +23,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let authRouter = AuthRouter(diContainer: diContainer)
         let mainTabRouter = MainTabRouter(diContainer: diContainer)
+        let uploadTWeetRouter = UploadTweetRouter()
         authRouter.setMainTabRouter(mainTabRouter: mainTabRouter)
         mainTabRouter.setAuthRouter(authRouter: authRouter)
+        mainTabRouter.setUploadTWeetRouter(uploadTweetRouter: uploadTWeetRouter)
 
-        let mainTabVC = MainTabController(userRepository: diContainer.makeUserRepository(), logoutUseCase: diContainer.makeLogoutUseCase(), router: mainTabRouter)
-
+        let mainTabVC = MainTabController(diContainer: diContainer, router: mainTabRouter)
         self.window?.rootViewController = mainTabVC
         self.window?.makeKeyAndVisible()
 

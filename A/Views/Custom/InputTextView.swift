@@ -15,7 +15,7 @@ final class InputTextView: UITextView, UITextViewDelegate {
 
     private let overlayView = UIView()
 
-     let placeholderLabel = UILabel().then {
+    let placeholderLabel = UILabel().then {
         $0.text = "What's happening?"
         $0.font = .systemFont(ofSize: 16)
         $0.textColor = .lightGray
@@ -36,7 +36,6 @@ final class InputTextView: UITextView, UITextViewDelegate {
     override var delegate: UITextViewDelegate? {
         didSet {
             customTextViewDelegate = delegate
-            super.delegate = self // 항상 self로 고정!
         }
     }
 
@@ -44,7 +43,7 @@ final class InputTextView: UITextView, UITextViewDelegate {
 
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
-
+        super.delegate = self
         configureUI()
         setup()
         configureConstraints()
@@ -67,7 +66,6 @@ final class InputTextView: UITextView, UITextViewDelegate {
 
     private func configureUI() {
         translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = .white
         font = .systemFont(ofSize: 16)
         textColor = .black
         isScrollEnabled = false

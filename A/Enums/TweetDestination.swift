@@ -8,6 +8,6 @@
 import Foundation
 
 enum TweetDestination {
-    case uploadTweet
+    case uploadTweet(userViewModel: UserViewModel)
     
 }

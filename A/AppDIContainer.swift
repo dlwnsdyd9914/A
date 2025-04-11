@@ -14,11 +14,19 @@ final class AppDIContainer {
         return authService
     }
 
+    func makeTweetService() -> TweetService {
+        return TweetService()
+    }
+
 
 
     // MARK: - Repositories
     func makeAuthRepository() -> AuthRepositoryProtocol {
         return AuthRepository(service: makeAuthService())
+    }
+
+    func makeTweetRepository() -> TweetRepositoryProtocol {
+        return TweetRepository(service: makeTweetService())
     }
 
     // MARK: - UseCases
@@ -40,6 +48,10 @@ final class AppDIContainer {
 
     func makeLogoutUseCase() -> LogoutUseCaseProtocol {
         return LogoutUseCase(authRepository: makeAuthRepository())
+    }
+
+    func makeUploadTweetUseCase() -> UploadTweetUseCaseProtocol {
+        return UploadTweetUseCase(tweetRepository: makeTweetRepository())
     }
 
     func makeRootNavigation(with nav: UINavigationController?) -> UINavigationController {
