@@ -24,7 +24,6 @@
 		D3026BEE2DA7F90D00962AE3 /* AuthUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026BED2DA7F90D00962AE3 /* AuthUseCaseProtocol.swift */; };
 		D3026BF02DA7FC1600962AE3 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026BEF2DA7FC1600962AE3 /* MainTabController.swift */; };
 		D3026BF42DA7FE2100962AE3 /* MainTabRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026BF32DA7FE2100962AE3 /* MainTabRouting.swift */; };
-		D3026BF62DA7FE4500962AE3 /* MainTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026BF52DA7FE4500962AE3 /* MainTabCoordinator.swift */; };
 		D3026BF82DA806DA00962AE3 /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026BF72DA806DA00962AE3 /* FeedController.swift */; };
 		D3026BFA2DA806E100962AE3 /* ExplorerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026BF92DA806E100962AE3 /* ExplorerController.swift */; };
 		D3026BFC2DA806E800962AE3 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026BFB2DA806E800962AE3 /* NotificationController.swift */; };
@@ -37,6 +36,14 @@
 		D3026C0E2DA80D7C00962AE3 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026C0D2DA80D7C00962AE3 /* UserViewModel.swift */; };
 		D3026C102DA80D9900962AE3 /* UserViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026C0F2DA80D9900962AE3 /* UserViewModelProtocol.swift */; };
 		D3026C122DA80E2000962AE3 /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026C112DA80E2000962AE3 /* UserRepository.swift */; };
+		D3026C142DA8201D00962AE3 /* LogoutUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026C132DA8201D00962AE3 /* LogoutUseCase.swift */; };
+		D3026C162DA8205F00962AE3 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3026C152DA8205F00962AE3 /* FeedViewModel.swift */; };
+		D311B3392DA82B7600637377 /* Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311B3382DA82B7600637377 /* Mock.swift */; };
+		D311B33D2DA82E3700637377 /* TweetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311B33C2DA82E3700637377 /* TweetCell.swift */; };
+		D34762B92DA96D660030D71E /* MainTabRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34762B82DA96D650030D71E /* MainTabRouter.swift */; };
+		D367430C2DA91DC300C1A758 /* UploadTweetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D367430B2DA91DC300C1A758 /* UploadTweetController.swift */; };
+		D367430E2DA91DFE00C1A758 /* InputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D367430D2DA91DFE00C1A758 /* InputTextView.swift */; };
+		D36743102DA921D100C1A758 /* TweetDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = D367430F2DA921D100C1A758 /* TweetDestination.swift */; };
 		D37B091B2DA78D9D00DA5F25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D37B09122DA78D9D00DA5F25 /* Assets.xcassets */; };
 		D37B091D2DA78D9D00DA5F25 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D37B09152DA78D9D00DA5F25 /* LaunchScreen.storyboard */; };
 		D37B091F2DA78D9D00DA5F25 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37B09112DA78D9D00DA5F25 /* AppDelegate.swift */; };
@@ -57,10 +64,11 @@
 		D37B095E2DA7A79A00DA5F25 /* CornerRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37B095D2DA7A79A00DA5F25 /* CornerRadius.swift */; };
 		D37B09622DA7ACB700DA5F25 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37B09612DA7ACB700DA5F25 /* RegisterViewController.swift */; };
 		D37B09642DA7AF7800DA5F25 /* AuthDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37B09632DA7AF7800DA5F25 /* AuthDestination.swift */; };
-		D37B09682DA7AFC500DA5F25 /* AuthCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37B09672DA7AFC500DA5F25 /* AuthCoordinator.swift */; };
 		D37B096A2DA7B0A300DA5F25 /* AuthRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37B09692DA7B0A300DA5F25 /* AuthRouting.swift */; };
 		D39A24362DA7BD5600BD216E /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39A24352DA7BD5600BD216E /* Coordinator.swift */; };
-		D39A24382DA7BD6E00BD216E /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39A24372DA7BD6E00BD216E /* AppCoordinator.swift */; };
+		D3BBF7DA2DA93273008D0C31 /* AuthRouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BBF7D92DA93273008D0C31 /* AuthRouterProtocol.swift */; };
+		D3BBF7E02DA93647008D0C31 /* MainTabBarRouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BBF7DF2DA93647008D0C31 /* MainTabBarRouterProtocol.swift */; };
+		D3BBF7E22DA95931008D0C31 /* AuthRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BBF7E12DA95931008D0C31 /* AuthRouter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,7 +90,6 @@
 		D3026BED2DA7F90D00962AE3 /* AuthUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthUseCaseProtocol.swift; sourceTree = "<group>"; };
 		D3026BEF2DA7FC1600962AE3 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		D3026BF32DA7FE2100962AE3 /* MainTabRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabRouting.swift; sourceTree = "<group>"; };
-		D3026BF52DA7FE4500962AE3 /* MainTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabCoordinator.swift; sourceTree = "<group>"; };
 		D3026BF72DA806DA00962AE3 /* FeedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedController.swift; sourceTree = "<group>"; };
 		D3026BF92DA806E100962AE3 /* ExplorerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplorerController.swift; sourceTree = "<group>"; };
 		D3026BFB2DA806E800962AE3 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
@@ -95,6 +102,14 @@
 		D3026C0D2DA80D7C00962AE3 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		D3026C0F2DA80D9900962AE3 /* UserViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModelProtocol.swift; sourceTree = "<group>"; };
 		D3026C112DA80E2000962AE3 /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
+		D3026C132DA8201D00962AE3 /* LogoutUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutUseCase.swift; sourceTree = "<group>"; };
+		D3026C152DA8205F00962AE3 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
+		D311B3382DA82B7600637377 /* Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock.swift; sourceTree = "<group>"; };
+		D311B33C2DA82E3700637377 /* TweetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetCell.swift; sourceTree = "<group>"; };
+		D34762B82DA96D650030D71E /* MainTabRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabRouter.swift; sourceTree = "<group>"; };
+		D367430B2DA91DC300C1A758 /* UploadTweetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadTweetController.swift; sourceTree = "<group>"; };
+		D367430D2DA91DFE00C1A758 /* InputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputTextView.swift; sourceTree = "<group>"; };
+		D367430F2DA921D100C1A758 /* TweetDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetDestination.swift; sourceTree = "<group>"; };
 		D37B08F92DA78D8900DA5F25 /* A.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = A.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D37B09112DA78D9D00DA5F25 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D37B09122DA78D9D00DA5F25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -114,10 +129,11 @@
 		D37B095D2DA7A79A00DA5F25 /* CornerRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerRadius.swift; sourceTree = "<group>"; };
 		D37B09612DA7ACB700DA5F25 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		D37B09632DA7AF7800DA5F25 /* AuthDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthDestination.swift; sourceTree = "<group>"; };
-		D37B09672DA7AFC500DA5F25 /* AuthCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCoordinator.swift; sourceTree = "<group>"; };
 		D37B09692DA7B0A300DA5F25 /* AuthRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouting.swift; sourceTree = "<group>"; };
 		D39A24352DA7BD5600BD216E /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
-		D39A24372DA7BD6E00BD216E /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		D3BBF7D92DA93273008D0C31 /* AuthRouterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouterProtocol.swift; sourceTree = "<group>"; };
+		D3BBF7DF2DA93647008D0C31 /* MainTabBarRouterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarRouterProtocol.swift; sourceTree = "<group>"; };
+		D3BBF7E12DA95931008D0C31 /* AuthRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouter.swift; sourceTree = "<group>"; };
 		F6B04F4180DFDE5C40AEA9E6 /* Pods-A.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-A.release.xcconfig"; path = "Target Support Files/Pods-A/Pods-A.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -197,6 +213,7 @@
 			children = (
 				D3026BE12DA7E21900962AE3 /* SignUpUseCase.swift */,
 				D3026BE72DA7F7DC00962AE3 /* LoginUseCase.swift */,
+				D3026C132DA8201D00962AE3 /* LogoutUseCase.swift */,
 				D3026BE32DA7EBCE00962AE3 /* AppDIContainer.swift */,
 			);
 			path = UseCase;
@@ -229,6 +246,14 @@
 			path = RepositoryProtocol;
 			sourceTree = "<group>";
 		};
+		D311B33B2DA82E2E00637377 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				D311B33C2DA82E3700637377 /* TweetCell.swift */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
 		D37B08F02DA78D8900DA5F25 = {
 			isa = PBXGroup;
 			children = (
@@ -252,8 +277,7 @@
 			children = (
 				D37B09112DA78D9D00DA5F25 /* AppDelegate.swift */,
 				D37B09182DA78D9D00DA5F25 /* SceneDelegate.swift */,
-				D39A24372DA7BD6E00BD216E /* AppCoordinator.swift */,
-				D37B09662DA7AFA200DA5F25 /* AppCoordinator */,
+				D37B09662DA7AFA200DA5F25 /* Router */,
 				D3026BD22DA7CFDB00962AE3 /* API */,
 				D3026BCD2DA7CF1100962AE3 /* Core */,
 				D37B094A2DA7945F00DA5F25 /* Protocols */,
@@ -266,6 +290,7 @@
 				D37B09422DA7931F00DA5F25 /* Previews */,
 				D37B09132DA78D9D00DA5F25 /* Info.plist */,
 				D3026BD32DA7D0B300962AE3 /* GoogleService-Info.plist */,
+				D311B3382DA82B7600637377 /* Mock.swift */,
 			);
 			path = A;
 			sourceTree = "<group>";
@@ -273,6 +298,7 @@
 		D37B09302DA7907C00DA5F25 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D311B33B2DA82E2E00637377 /* Feed */,
 				D37B09522DA7986400DA5F25 /* Custom */,
 			);
 			path = Views;
@@ -285,6 +311,7 @@
 				D3026BE52DA7F69B00962AE3 /* LoginViewModel.swift */,
 				D3026C032DA8099F00962AE3 /* MainTabViewModel.swift */,
 				D3026C0D2DA80D7C00962AE3 /* UserViewModel.swift */,
+				D3026C152DA8205F00962AE3 /* FeedViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -305,6 +332,7 @@
 				D3026BF72DA806DA00962AE3 /* FeedController.swift */,
 				D3026BF92DA806E100962AE3 /* ExplorerController.swift */,
 				D3026BFB2DA806E800962AE3 /* NotificationController.swift */,
+				D367430B2DA91DC300C1A758 /* UploadTweetController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -331,6 +359,7 @@
 		D37B094A2DA7945F00DA5F25 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				D3BBF7D82DA9326C008D0C31 /* RouterProtocool */,
 				D3026C062DA80A3000962AE3 /* RepositoryProtocol */,
 				D3026BFE2DA8092D00962AE3 /* ModelProtocol */,
 				D3026BF22DA7FE1200962AE3 /* Routing */,
@@ -349,6 +378,7 @@
 				D37B095D2DA7A79A00DA5F25 /* CornerRadius.swift */,
 				D37B09632DA7AF7800DA5F25 /* AuthDestination.swift */,
 				D3026BBC2DA7C5C500962AE3 /* TextFieldType.swift */,
+				D367430F2DA921D100C1A758 /* TweetDestination.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -376,17 +406,27 @@
 			children = (
 				D37B09532DA7987600DA5F25 /* CustomTextField.swift */,
 				D37B095B2DA7A11000DA5F25 /* InputContainerView.swift */,
+				D367430D2DA91DFE00C1A758 /* InputTextView.swift */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
 		};
-		D37B09662DA7AFA200DA5F25 /* AppCoordinator */ = {
+		D37B09662DA7AFA200DA5F25 /* Router */ = {
 			isa = PBXGroup;
 			children = (
-				D37B09672DA7AFC500DA5F25 /* AuthCoordinator.swift */,
-				D3026BF52DA7FE4500962AE3 /* MainTabCoordinator.swift */,
+				D3BBF7E12DA95931008D0C31 /* AuthRouter.swift */,
+				D34762B82DA96D650030D71E /* MainTabRouter.swift */,
 			);
-			path = AppCoordinator;
+			path = Router;
+			sourceTree = "<group>";
+		};
+		D3BBF7D82DA9326C008D0C31 /* RouterProtocool */ = {
+			isa = PBXGroup;
+			children = (
+				D3BBF7D92DA93273008D0C31 /* AuthRouterProtocol.swift */,
+				D3BBF7DF2DA93647008D0C31 /* MainTabBarRouterProtocol.swift */,
+			);
+			path = RouterProtocool;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -512,21 +552,25 @@
 			files = (
 				D37B093A2DA790ED00DA5F25 /* LoginViewController.swift in Sources */,
 				D3026C102DA80D9900962AE3 /* UserViewModelProtocol.swift in Sources */,
+				D311B33D2DA82E3700637377 /* TweetCell.swift in Sources */,
 				D3026BE82DA7F7DC00962AE3 /* LoginUseCase.swift in Sources */,
 				D3026BFA2DA806E100962AE3 /* ExplorerController.swift in Sources */,
 				D3026BE42DA7EBCE00962AE3 /* AppDIContainer.swift in Sources */,
 				D37B091F2DA78D9D00DA5F25 /* AppDelegate.swift in Sources */,
 				D37B09202DA78D9D00DA5F25 /* SceneDelegate.swift in Sources */,
-				D37B09682DA7AFC500DA5F25 /* AuthCoordinator.swift in Sources */,
 				D3026C002DA8093300962AE3 /* UserModelProtocol.swift in Sources */,
+				D3BBF7DA2DA93273008D0C31 /* AuthRouterProtocol.swift in Sources */,
 				D37B09642DA7AF7800DA5F25 /* AuthDestination.swift in Sources */,
 				D3026BF82DA806DA00962AE3 /* FeedController.swift in Sources */,
 				D39A24362DA7BD5600BD216E /* Coordinator.swift in Sources */,
 				D3026BF02DA7FC1600962AE3 /* MainTabController.swift in Sources */,
 				D37B095A2DA79E7000DA5F25 /* Fonts.swift in Sources */,
 				D3026BE62DA7F69B00962AE3 /* LoginViewModel.swift in Sources */,
+				D3BBF7E22DA95931008D0C31 /* AuthRouter.swift in Sources */,
 				D3026C082DA80A4000962AE3 /* UserRepositoryProtocol.swift in Sources */,
 				D37B093E2DA7921300DA5F25 /* UIImage+Icons.swift in Sources */,
+				D34762B92DA96D660030D71E /* MainTabRouter.swift in Sources */,
+				D3026C142DA8201D00962AE3 /* LogoutUseCase.swift in Sources */,
 				D3026BD82DA7D16A00962AE3 /* AuthServiceError.swift in Sources */,
 				D3026BBD2DA7C5C500962AE3 /* TextFieldType.swift in Sources */,
 				D37B09622DA7ACB700DA5F25 /* RegisterViewController.swift in Sources */,
@@ -534,29 +578,33 @@
 				D3026C042DA8099F00962AE3 /* MainTabViewModel.swift in Sources */,
 				D37B093C2DA7916100DA5F25 /* UIView+Anchor.swift in Sources */,
 				D37B09442DA7935E00DA5F25 /* VCPreview.swift in Sources */,
-				D3026BF62DA7FE4500962AE3 /* MainTabCoordinator.swift in Sources */,
 				D3026BCE2DA7CF1100962AE3 /* CellIdentifier.swift in Sources */,
+				D367430C2DA91DC300C1A758 /* UploadTweetController.swift in Sources */,
 				D3026BDE2DA7D68800962AE3 /* AuthRepository.swift in Sources */,
 				D3026BCF2DA7CF1100962AE3 /* FirebasePath.swift in Sources */,
 				D3026BE22DA7E21900962AE3 /* SignUpUseCase.swift in Sources */,
 				D3026C0C2DA80B3B00962AE3 /* UserService.swift in Sources */,
-				D39A24382DA7BD6E00BD216E /* AppCoordinator.swift in Sources */,
+				D311B3392DA82B7600637377 /* Mock.swift in Sources */,
 				D3026BEE2DA7F90D00962AE3 /* AuthUseCaseProtocol.swift in Sources */,
 				D3026C022DA8094900962AE3 /* User.swift in Sources */,
 				D37B095E2DA7A79A00DA5F25 /* CornerRadius.swift in Sources */,
+				D3026C162DA8205F00962AE3 /* FeedViewModel.swift in Sources */,
 				D3026BF42DA7FE2100962AE3 /* MainTabRouting.swift in Sources */,
 				D37B096A2DA7B0A300DA5F25 /* AuthRouting.swift in Sources */,
 				D3026BDC2DA7D39500962AE3 /* AuthService.swift in Sources */,
+				D36743102DA921D100C1A758 /* TweetDestination.swift in Sources */,
 				D37B09402DA7925900DA5F25 /* UIColor+AppColors.swift in Sources */,
 				D3026BFC2DA806E800962AE3 /* NotificationController.swift in Sources */,
 				D3026BBB2DA7C4EF00962AE3 /* RegisterViewModel.swift in Sources */,
 				D37B09542DA7987600DA5F25 /* CustomTextField.swift in Sources */,
 				D3026C0A2DA80A6200962AE3 /* UserServiceError.swift in Sources */,
 				D37B09582DA79CE400DA5F25 /* AttributedTextBuilder.swift in Sources */,
+				D367430E2DA91DFE00C1A758 /* InputTextView.swift in Sources */,
 				D37B09562DA7993A00DA5F25 /* NSAttributedString+Style.swift in Sources */,
 				D3026C0E2DA80D7C00962AE3 /* UserViewModel.swift in Sources */,
 				D3026C122DA80E2000962AE3 /* UserRepository.swift in Sources */,
 				D37B095C2DA7A11000DA5F25 /* InputContainerView.swift in Sources */,
+				D3BBF7E02DA93647008D0C31 /* MainTabBarRouterProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

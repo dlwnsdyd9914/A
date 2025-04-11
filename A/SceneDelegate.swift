@@ -10,22 +10,26 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var appCordinator: AppCoordinator?
+    
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         let window = UIWindow(windowScene: windowScene)
         self.window = window
 
-        let diContainer = AppDIContainer() // ✅ DI 컨테이너 생성
-        let appCoordinator = AppCoordinator(window: window, diContainer: diContainer)
-        self.appCordinator = appCoordinator
-        appCoordinator.start()
+        let diContainer = AppDIContainer()
+
+        let authRouter = AuthRouter(diContainer: diContainer)
+        let mainTabRouter = MainTabRouter(diContainer: diContainer)
+        authRouter.setMainTabRouter(mainTabRouter: mainTabRouter)
+        mainTabRouter.setAuthRouter(authRouter: authRouter)
+
+        let mainTabVC = MainTabController(userRepository: diContainer.makeUserRepository(), logoutUseCase: diContainer.makeLogoutUseCase(), router: mainTabRouter)
+
+        self.window?.rootViewController = mainTabVC
+        self.window?.makeKeyAndVisible()
 
     }
 

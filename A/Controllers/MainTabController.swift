@@ -14,9 +14,11 @@ final class MainTabController: UITabBarController {
 
     // MARK: - Properties
 
-    private let router: MainTabRouting
+
     private let viewModel: MainTabViewModel
     private var userViewModel: UserViewModel?
+    private let logoutUseCase: LogoutUseCaseProtocol
+    private let router: MainTabBarRouterProtocol
 
     // MARK: - View Models
 
@@ -30,10 +32,13 @@ final class MainTabController: UITabBarController {
         $0.addTarget(self, action: #selector(handleNewTweetButton), for: .touchUpInside)
     }
 
+    // MARK: - Initializer
 
-    init(router: MainTabRouting, userRepository: UserRepository) {
-        self.router = router
+    init(userRepository: UserRepositoryProtocol, logoutUseCase: LogoutUseCaseProtocol, router: MainTabBarRouterProtocol) {
+
         self.viewModel = MainTabViewModel(userRepository: userRepository)
+        self.logoutUseCase = logoutUseCase
+        self.router = router
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -61,7 +66,10 @@ final class MainTabController: UITabBarController {
     // MARK: - Selectors
 
     @objc private func handleNewTweetButton() {
-        print(#function)
+        DispatchQueue.main.async {[weak self] in
+            guard let self else { return }
+            
+        }
     }
 
     // MARK: - UI Configurations
@@ -82,8 +90,11 @@ final class MainTabController: UITabBarController {
     }
 
     private func makeTabbarController() {
+
+        guard let userViewModel = userViewModel else { return }
+
         let tabs: [(UIImage, UIViewController)] = [
-            (UIImage.feedImage, FeedController()),
+            (UIImage.feedImage, FeedController(userViewModel: userViewModel, logoutUseCase: logoutUseCase, router: router)),
             (UIImage.searchImage, ExplorerController()),
             (UIImage.like, NotificationController())
         ]
@@ -114,7 +125,7 @@ final class MainTabController: UITabBarController {
             print("❗️로그아웃 상태!")
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
-                router.showLogin()
+                router.showLogin(from: self)
             }
         }
     }

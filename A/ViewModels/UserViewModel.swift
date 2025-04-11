@@ -40,3 +40,21 @@ final class UserViewModel: UserViewModelProtocol {
     }
 
 }
+
+struct MockUserModel: UserModelProtocol {
+    var bio: String
+
+    var userFollowingCount: Int = 0
+
+    var userFollowerCount: Int = 1
+
+    var isCurrentUser: Bool = true
+
+    var didFollow: Bool = false
+    var email: String = "preview@example.com"
+    var userName: String = "PreviewUser"
+    var fullName: String = "Preview Full Name"
+    var profileImageUrl: String = "https://via.placeholder.com/150"
+    var uid: String = "previewUID"
+}
+

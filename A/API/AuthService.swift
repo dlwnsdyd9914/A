@@ -11,6 +11,14 @@ import Firebase
 class AuthService {
     typealias CompletionHandler = (Result<Void, AuthServiceError>) -> Void
 
+    static let shared = AuthService()
+    private init() {}
+
+    var isLoggedIn: Bool {
+            return Auth.auth().currentUser != nil
+        }
+
+
      func createUser(email: String, password: String, profileImage: UIImage, username: String, fullname: String, completion: @escaping CompletionHandler) {
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
             guard let self = self else { return }
@@ -116,5 +124,7 @@ class AuthService {
             completion(.failure(.faildToLogout))
         }
     }
+
+    
 }
 

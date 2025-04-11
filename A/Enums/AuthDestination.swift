@@ -10,5 +10,4 @@ import Foundation
 enum AuthDestination {
     case login
     case register
-    case main
 }

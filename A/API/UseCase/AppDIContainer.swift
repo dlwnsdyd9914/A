@@ -8,10 +8,13 @@
 import UIKit
 final class AppDIContainer {
 
-    // MARK: - Services
+    private lazy var authService = AuthService.shared
+
     func makeAuthService() -> AuthService {
-        return AuthService()
+        return authService
     }
+
+
 
     // MARK: - Repositories
     func makeAuthRepository() -> AuthRepositoryProtocol {
@@ -19,11 +22,11 @@ final class AppDIContainer {
     }
 
     // MARK: - UseCases
-    func makeSignUpUseCase() -> SignUpUseCase {
+    func makeSignUpUseCase() -> SignUpUseCaseProtocol {
         return SignUpUseCase(authRepository: makeAuthRepository())
     }
 
-    func makeLoginUseCase() -> LoginUseCase {
+    func makeLoginUseCase() -> LoginUseCaseProtocol {
         return LoginUseCase(authRepository: makeAuthRepository())
     }
 
@@ -31,8 +34,17 @@ final class AppDIContainer {
         return UserService()
     }
 
-    func makeUserRepository() -> UserRepository {
+    func makeUserRepository() -> UserRepositoryProtocol {
         return UserRepository(service: makeUserService())
     }
+
+    func makeLogoutUseCase() -> LogoutUseCaseProtocol {
+        return LogoutUseCase(authRepository: makeAuthRepository())
+    }
+
+    func makeRootNavigation(with nav: UINavigationController?) -> UINavigationController {
+        return nav ?? UINavigationController()
+    }
+
 
 }

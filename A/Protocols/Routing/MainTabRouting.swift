@@ -9,4 +9,10 @@ import UIKit
 
 protocol MainTabRouting: AnyObject {
     func showLogin()
+
+    func logout()
+
+    func navigate(to destination: TweetDestination)
+
+    func popView()
 }

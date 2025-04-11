@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+
+enum CellIdentifier {
+    static let tweetCell = "TweetCell"
+}

@@ -10,11 +10,11 @@ import SwiftUI
 import Then
 import SnapKit
 
-class RegisterViewController: UIViewController {
+final class RegisterViewController: UIViewController {
 
     // MARK: - Properties
 
-    private let router: AuthRouting
+    private let router: AuthRouterProtocol
 
     // MARK: - View Models
 
@@ -72,9 +72,9 @@ class RegisterViewController: UIViewController {
 
     // MARK: - Initializer
 
-    init(router: AuthRouting, signUpUseCase: SignUpUseCase) {
-        self.router = router
+    init(router: AuthRouterProtocol, signUpUseCase: SignUpUseCaseProtocol) {
         self.viewModel = RegisterViewModel(signUpUserCase: signUpUseCase)
+        self.router = router
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -108,13 +108,13 @@ class RegisterViewController: UIViewController {
     }
 
     @objc private func handleLoginButtonTapped() {
-        router.popNav()
+        router.popNav(from: self)
     }
 
     @objc private func handleTextFieldChange(textField: CustomTextField) {
         guard let text = textField.text,
               let type = textField.fieldType else { return }
-                viewModel.bindTextField(type: type, text: text)
+        viewModel.bindTextField(type: type, text: text)
     }
 
     // MARK: - UI Configurations
@@ -201,7 +201,9 @@ class RegisterViewController: UIViewController {
 
         viewModel.onSuccess = { [weak self] in
             guard let self else { return }
-            self.router.popNav()
+            DispatchQueue.main.async {
+                self.router.popNav(from: self)
+            }
         }
 
         viewModel.onFail = { [weak self] errorMessage in

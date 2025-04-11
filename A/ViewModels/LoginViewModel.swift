@@ -43,13 +43,12 @@ final class LoginViewModel {
             break
         }
     }
-
     private func validateForm() {
         validate = [
             email?.isEmpty == false,
             password?.isEmpty == false
         ].allSatisfy({$0})
-        onValidationChange?(validate, validate ? .buttonEnabled : .buttonDisabled)
+        onValidationChange?(validate, validate ? UIColor.buttonEnabled : .buttonDisabled)
     }
 
     func login() {

@@ -17,12 +17,14 @@ final class LoginViewController: UIViewController {
 
     // MARK: - Properties
 
-    private let router: AuthRouting
+    private let router: AuthRouterProtocol
+
 
     // MARK: - View Models
 
     private let viewModel: LoginViewModel
 
+    
     // MARK: - UI Components
 
     /// 앱 메인 로고 이미지 뷰
@@ -50,7 +52,7 @@ final class LoginViewController: UIViewController {
 
     private lazy var loginButton = UIButton(type: .custom).then {
         $0.setTitle("Login", for: .normal)
-        $0.setTitleColor(.textPrimary, for: .normal)
+        $0.setTitleColor(.buttonTitleDisabled, for: .normal)
         $0.titleLabel?.font = Fonts.authButtonTitle
         $0.backgroundColor = .buttonDisabled
         $0.isEnabled = false
@@ -68,7 +70,7 @@ final class LoginViewController: UIViewController {
 
     // MARK: - Initializer
 
-    init(router: AuthRouting, loginUseCase: LoginUseCase) {
+    init(router: AuthRouterProtocol, loginUseCase: LoginUseCaseProtocol) {
         self.router = router
         self.viewModel = LoginViewModel(loginUseCase: loginUseCase)
         super.init(nibName: nil, bundle: nil)
@@ -98,13 +100,13 @@ final class LoginViewController: UIViewController {
     }
 
     @objc private func handleRegisterButtonTapped() {
-        router.navigate(to: .register)
+        router.navigate(to: .register, from: self)
     }
 
     @objc private func handleTextFieldChange(textField: CustomTextField) {
         guard let text = textField.text,
               let type = textField.fieldType else { return }
-        viewModel.bindTextField(type: type, text: text)
+                viewModel.bindTextField(type: type, text: text)
     }
 
 
@@ -171,6 +173,11 @@ final class LoginViewController: UIViewController {
         self.present(alert, animated: true)
     }
 
+    private func clearTextFields() {
+        self.emailTextField.text = ""
+        self.passwordTextField.text = ""
+    }
+
 
     // MARK: - Bind ViewModels
 
@@ -179,13 +186,18 @@ final class LoginViewController: UIViewController {
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.loginButton.isEnabled = status
-                self.loginButton.backgroundColor = .buttonEnabled
+                self.loginButton.backgroundColor = buttonColor
             }
         }
 
         viewModel.onSuccess = { [weak self] in
             guard let self else { return }
-            self.router.navigate(to: .main)
+            print("📲 LoginViewController - onSuccess 클로저 실행됨")
+            DispatchQueue.main.async {
+                self.clearTextFields()
+                self.loginButton.backgroundColor = .buttonDisabled
+                self.router.navigate(to: .login, from: self)
+            }
         }
 
         viewModel.onFail = { [weak self] errorMessage in

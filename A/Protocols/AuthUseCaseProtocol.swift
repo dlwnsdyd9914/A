@@ -14,3 +14,7 @@ protocol SignUpUseCaseProtocol {
 protocol LoginUseCaseProtocol {
     func login(email: String, password: String, completion: @escaping (Result<Void, AuthServiceError>) -> Void)
 }
+
+protocol LogoutUseCaseProtocol {
+    func logout(completion: @escaping (Result<Void, AuthServiceError>) -> Void)
+}

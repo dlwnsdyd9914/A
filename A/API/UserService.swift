@@ -15,8 +15,7 @@ class UserService {
     func getCurrentUser(completion: @escaping CompletionHandler) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
 
-        fetchUser(uid: currentUid) { [weak self] result in
-            guard let self else { return }
+        fetchUser(uid: currentUid) {result in
 
             switch result {
             case .success(let user):
