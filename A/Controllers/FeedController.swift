@@ -15,7 +15,13 @@ final class FeedController: UIViewController {
 
     // MARK: - Properties
 
-    private let router: MainTabBarRouterProtocol
+    private let router : MainTabBarRouterProtocol
+    private let feedRouter : FeedRouterProtocol
+    private let repository : TweetRepositoryProtocol
+    private let logoutUseCase: LogoutUseCaseProtocol
+    private let tweetLikeUseCase: TweetLikeUseCaseProtocol
+
+
 
     // MARK: - View Models
 
@@ -56,19 +62,29 @@ final class FeedController: UIViewController {
     }
 
     // MARK: - Initializer
-
-    init(userViewModel: UserViewModel, logoutUseCase: LogoutUseCaseProtocol, router: MainTabBarRouterProtocol, repository: TweetRepositoryProtocol) {
+    init(userViewModel: UserViewModel, logoutUseCase: LogoutUseCaseProtocol, router: MainTabBarRouterProtocol, repository: TweetRepositoryProtocol, feedRouter: FeedRouterProtocol, tweetLikeUseCase: TweetLikeUseCaseProtocol) {
         self.userViewModel = userViewModel
+        self.repository = repository
         self.viewModel = FeedViewModel(logoutUseCase: logoutUseCase, repository: repository)
         self.router = router
+        self.feedRouter = feedRouter
+        self.tweetLikeUseCase = tweetLikeUseCase
+        self.logoutUseCase = logoutUseCase
         super.init(nibName: nil, bundle: nil)
     }
+
+
 
     required init?(coder: NSCoder) {
         fatalError("")
     }
 
     // MARK: - Life Cycles
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = false
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -202,7 +218,9 @@ final class FeedController: UIViewController {
             }
         }
 
+
         viewModel.fetchAllTweets()
+
     }
 
 
@@ -225,15 +243,34 @@ extension FeedController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
 
-        let tweetViewModel = TweetViewModel(tweet: viewModel.allTweets[indexPath.row])
+        let tweetViewModel = TweetViewModel(tweet: viewModel.allTweets[indexPath.row], repository: repository, useCase: tweetLikeUseCase)
         cell.viewModel = tweetViewModel
+
+        cell.onProfileImageViewTapped = { [weak self] in
+            guard let self else { return }
+            let userViewModel = UserViewModel(user: tweetViewModel.getUser())
+            DispatchQueue.main.async {
+                self.feedRouter.navigateToUserProfile(userViewModel: userViewModel, from: self)
+            }
+        }
+
+        cell.viewModel?.onHandleCommentButton = {[weak self] in
+            guard let self else { return }
+            let userViewModel = UserViewModel(user: tweetViewModel.getUser())
+            let tweet = viewModel.allTweets[indexPath.row]
+            self.feedRouter.navigate(to: .uploadReply(userViewModel: userViewModel, tweet: tweet), from: self)
+        }
         return cell
     }
 }
 
 extension FeedController: UICollectionViewDelegate {
-
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let tweetViewModel = TweetViewModel(tweet: viewModel.allTweets[indexPath.item], repository: repository, useCase: tweetLikeUseCase)
+        feedRouter.navigateToTweetDetail(viewModel: tweetViewModel, from: self)
+    }
 }
+
 
 extension FeedController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -248,8 +285,11 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
     let mockLogoutUseCase = MockLogoutUseCase()
     let mockRouter = MockMainTabRouter()
     let mockRepository = MockTweetRepository()
+    let mockFeedRouter = MockFeedRouter()
+    let mockDiContainer = MockDiContainer()
+    let mockTweetLikeUseCase = MockTweetLikeUseCase()
 
     VCPreView {
-        UINavigationController(rootViewController: FeedController(userViewModel: mockUserViewModel, logoutUseCase: mockLogoutUseCase, router: mockRouter, repository: mockRepository))
+        UINavigationController(rootViewController: FeedController(userViewModel: mockUserViewModel, logoutUseCase: mockLogoutUseCase, router: mockRouter, repository: mockRepository, feedRouter: mockFeedRouter, tweetLikeUseCase: mockTweetLikeUseCase))
     }
 }

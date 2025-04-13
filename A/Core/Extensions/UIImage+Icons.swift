@@ -25,9 +25,10 @@ extension UIImage {
     static let plusProfileImage = UIImage(named: "plus_photo")!
 
     // MARK: - Tweet Actions
-    static let commentImage = UIImage(named: "add-library")!
-    static let retweetImage = UIImage(named: "add-library")!
+    static let commentImage = #imageLiteral(resourceName: "comment")
+    static let retweetImage = #imageLiteral(resourceName: "retweet")
     static let shareImage = UIImage(named: "share")!
     static let likeImage = UIImage(named: "like")!
-    static let backImage = UIImage(named: "baseline_arrow_back_white_24dp")!
+    static let backImage = #imageLiteral(resourceName: "baseline_arrow_back_white_24dp")
+
 }

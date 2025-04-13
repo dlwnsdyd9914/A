@@ -90,7 +90,7 @@ final class RegisterViewController: UIViewController {
 
     /// 라우터와 회원가입 유즈케이스를 주입받아 뷰모델 생성
     init(router: AuthRouterProtocol, signUpUseCase: SignUpUseCaseProtocol) {
-        self.viewModel = RegisterViewModel(signUpUserCase: signUpUseCase)
+        self.viewModel = RegisterViewModel(signUpUseCase: signUpUseCase)
         self.router = router
         super.init(nibName: nil, bundle: nil)
     }

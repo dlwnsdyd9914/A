@@ -9,6 +9,8 @@ import UIKit
 
 final class UserViewModel: UserViewModelProtocol {
 
+    
+
     private var user: UserModelProtocol
 
     init(user: UserModelProtocol) {
@@ -37,6 +39,23 @@ final class UserViewModel: UserViewModelProtocol {
 
     var email: String {
         return user.email
+    }
+    var didFollow: Bool {
+        get {
+            return user.didFollow
+        }
+        set {
+            user.didFollow = newValue
+        }
+    }
+
+
+    func getUser() -> UserModelProtocol {
+        return user
+    }
+
+    func updateFollowState(_ followed: Bool) {
+        user.didFollow = followed
     }
 
 }

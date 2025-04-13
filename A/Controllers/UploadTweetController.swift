@@ -15,7 +15,11 @@ final class UploadTweetController: UIViewController {
 
     // MARK: - Properties
 
+
+
     private let router: UploadTweetRouterProtocol
+
+    private let uploadTweetUseCase: UploadTweetUseCaseProtocol
 
 
     // MARK: - View Models
@@ -60,10 +64,11 @@ final class UploadTweetController: UIViewController {
 
     // MARK: - Initializer
 
-    init(router: UploadTweetRouterProtocol, userViewModel: UserViewModel, useCase: UploadTweetUseCaseProtocol){
+    init(router: UploadTweetRouterProtocol, userViewModel: UserViewModel, configuration: UploadTweetConfiguration, presentaionStyle: UploadTweetPresentationStyle, uploadTweetUseCase: UploadTweetUseCaseProtocol){
+        self.uploadTweetUseCase = uploadTweetUseCase
         self.router = router
         self.userViewModel = userViewModel
-        self.viewModel = UploadTweetViewModel(tweetUploadUseCase: useCase)
+        self.viewModel = UploadTweetViewModel(tweetUploadUseCase: uploadTweetUseCase, configuration: configuration, presentationStyle: presentaionStyle)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -92,7 +97,7 @@ final class UploadTweetController: UIViewController {
     // MARK: - Selectors
 
     @objc private func handleCancleButtonTapped() {
-        router.dismiss(from: self)
+        router.close(style: viewModel.presentationStyle, from: self)
     }
 
     @objc private func handleUploadTweetButtonTapped() {
@@ -178,12 +183,16 @@ final class UploadTweetController: UIViewController {
             }
         }
 
-        viewModel.onTweetUploadSuccess = { [weak self] in
+        viewModel.onUploadResult = {[weak self] in
             guard let self else { return }
             DispatchQueue.main.async {
-                self.router.dismiss(from: self)
+                self.router.close(style: self.viewModel.presentationStyle, from: self)
             }
         }
+
+        replyLabel.isHidden = !viewModel.shouldShowReplyLabel
+        replyLabel.text = viewModel.replyText
+        uploadTweetButton.setTitle(viewModel.actionButtonTitle, for: .normal)
     }
 
     private func setProfileImageView(userViewModel: UserViewModel) {
@@ -202,11 +211,14 @@ extension UploadTweetController: UITextViewDelegate {
 
 #Preview {
 
-    let mockRouter = MockUploadRouter()
+    let mockRouter = MockUploadTweetRouter()
     let mockUserViewModel = UserViewModel(user: MockUserModel(bio: "Test"))
     let mockUseCase = MockUploadTweetUseCase()
+    let mockDiContainer = MockDiContainer()
+
+
 
     VCPreView {
-        UINavigationController(rootViewController: UploadTweetController(router: mockRouter, userViewModel: mockUserViewModel, useCase: mockUseCase))
+        UINavigationController(rootViewController: UploadTweetController(router: mockRouter, userViewModel: mockUserViewModel, configuration: .tweet, presentaionStyle: .modal, uploadTweetUseCase: mockUseCase))
     }.edgesIgnoringSafeArea(.all)
 }

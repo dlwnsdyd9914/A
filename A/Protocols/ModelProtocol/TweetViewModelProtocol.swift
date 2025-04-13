@@ -10,9 +10,13 @@ import Foundation
 protocol TweetViewModelProtocol {
     var caption: String { get }
     var timestamp: String { get }
+    var profileImageUrl: URL? { get }
     var tweetId: String { get }
     var infoLabel: NSAttributedString { get }
-    var profileImageUrl: URL? { get }
-    var userViewModel: UserViewModelProtocol { get }
-}
+    func handleLikeButton()
+    func handleRetweetButton()
+    func handleCommentButton()
+    func handleShareButton()
+    var onHandleCommentButton: (() -> Void)? { get set }
 
+}

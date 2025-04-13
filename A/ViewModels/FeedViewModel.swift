@@ -14,6 +14,8 @@ final class FeedViewModel {
 
     private(set) var allTweets: [Tweet] = []
 
+
+
     init(logoutUseCase: LogoutUseCaseProtocol, repository: TweetRepositoryProtocol) {
         self.logoutUseCase = logoutUseCase
         self.repository = repository
@@ -54,5 +56,7 @@ final class FeedViewModel {
             }
         }
     }
+
+    
 
 }

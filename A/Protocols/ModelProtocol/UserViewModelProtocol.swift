@@ -13,5 +13,6 @@ protocol UserViewModelProtocol {
     var uid: String { get }
     var profileImageUrl: URL? { get }
     var email: String { get }
-    
+    var didFollow: Bool { get set}
+    func updateFollowState(_ followed: Bool)
 }

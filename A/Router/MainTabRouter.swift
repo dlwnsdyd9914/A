@@ -11,15 +11,17 @@ final class MainTabRouter: MainTabBarRouterProtocol {
 
 
 
-    private let diContainer: AppDIContainer
 
     private var authRouter: AuthRouterProtocol?
     private var uploadTweetRouter: UploadTweetRouterProtocol?
 
+    private let loginUseCase: LoginUseCaseProtocol
 
-    init(diContainer: AppDIContainer) {
-        self.diContainer = diContainer
+    init(loginUseCase: LoginUseCaseProtocol) {
+        self.loginUseCase = loginUseCase
     }
+
+
 
     func setAuthRouter(authRouter: AuthRouterProtocol){
         self.authRouter = authRouter
@@ -34,7 +36,7 @@ final class MainTabRouter: MainTabBarRouterProtocol {
 
         let loginVC = LoginViewController(
             router: authRouter,
-            loginUseCase: diContainer.makeLoginUseCase()
+            loginUseCase: loginUseCase
         )
         let nav = UINavigationController(rootViewController: loginVC)
 
@@ -47,25 +49,18 @@ final class MainTabRouter: MainTabBarRouterProtocol {
     func logout(from viewController: UIViewController) {
         guard let authRouter else { return }
 
-        let loginViewController = UINavigationController(rootViewController: LoginViewController(router: authRouter, loginUseCase: diContainer.makeLoginUseCase()))
+        let loginViewController = UINavigationController(rootViewController: LoginViewController(router: authRouter, loginUseCase: loginUseCase))
         loginViewController.modalPresentationStyle = .fullScreen
         viewController.present(loginViewController, animated: true)
     }
 
     func navigate(to destination: TweetDestination, from viewController: UIViewController) {
-        
-        switch destination {
-        case .uploadTweet(let userViewModel):
-            guard let uploadTweetRouter else { return }
-            let uploadTweetController = UINavigationController(rootViewController: UploadTweetController(router: uploadTweetRouter, userViewModel: userViewModel, useCase: diContainer.makeUploadTweetUseCase()))
-            uploadTweetController.modalPresentationStyle = .fullScreen
-            viewController.present(uploadTweetController, animated: true)
-        }
-
+        uploadTweetRouter?.navigate(to: destination, from: viewController)
     }
 
-    func popNav(from viewController: UIViewController) {
 
+    func popNav(from viewController: UIViewController) {
+        viewController.navigationController?.popViewController(animated: true)
     }
 
 
