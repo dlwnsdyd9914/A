@@ -10,46 +10,72 @@ import SnapKit
 import Then
 import SwiftUI
 
+/// 트윗 상세 화면 컨트롤러
+/// - 트윗 본문 + 리플 목록을 표시하며, MVVM 구조 기반으로 구성
+/// - TweetViewModel이 메인 모델이며, 댓글/좋아요 관련 유즈케이스와 연결됨
+/// - 동적 셀 높이 계산을 통해 댓글이 많아도 유연한 레이아웃 유지
 final class TweetController: UIViewController {
 
-    // MARK: - Properties
+    // MARK: - Dependencies
 
+    /// 트윗 데이터 fetch 및 좋아요 처리에 사용되는 레포지토리
     private let repository: TweetRepositoryProtocol
 
+    /// 현재 화면에서 발생하는 라우팅(액션 시트, 프로필 이동 등)을 담당
     private let router: TweetRouterProtocol
 
+    /// 트윗 좋아요/언좋아요 관련 유즈케이스 (비즈니스 로직)
     private let useCase: TweetLikeUseCaseProtocol
 
+    /// 유저 팔로우/언팔로우 처리 유즈케이스
     private let followUseCase: FollowUseCaseProtocol
 
+    /// 유저 관련 정보 fetch/처리용 레포지토리
+    private let userRepository: UserRepositoryProtocol
 
-    // MARK: - View Models
+    // MARK: - ViewModels
 
+    /// 현재 트윗의 전체 상태 (본문, 리플, 좋아요 등)
     private let viewModel: TweetViewModel
+
+    /// 현재 로그인된 유저 상태
+    private let userViewModel: UserViewModel
 
     // MARK: - UI Components
 
+    /// 트윗 본문 + 리플 목록을 구성하는 컬렉션뷰
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        return collectionView
+        return UICollectionView(frame: .zero, collectionViewLayout: layout)
     }()
 
     // MARK: - Initializer
-    init(viewModel: TweetViewModel, repository: TweetRepositoryProtocol, router: TweetRouterProtocol, useCase: TweetLikeUseCaseProtocol, followUseCase: FollowUseCaseProtocol) {
+
+    /// DI를 통한 의존성 주입
+    init(
+        viewModel: TweetViewModel,
+        repository: TweetRepositoryProtocol,
+        router: TweetRouterProtocol,
+        useCase: TweetLikeUseCaseProtocol,
+        followUseCase: FollowUseCaseProtocol,
+        userViewModel: UserViewModel,
+        userRepository: UserRepositoryProtocol
+    ) {
         self.viewModel = viewModel
         self.repository = repository
         self.router = router
         self.useCase = useCase
         self.followUseCase = followUseCase
+        self.userViewModel = userViewModel
+        self.userRepository = userRepository
         super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
-        fatalError()
+        fatalError("Storyboard 미사용")
     }
 
-    // MARK: - Life Cycles
+    // MARK: - Life Cycle
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -64,13 +90,10 @@ final class TweetController: UIViewController {
         bindViewModel()
     }
 
-    // MARK: - Selectors
-
     // MARK: - UI Configurations
 
     private func configureNavigationBar() {
         navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBar.setDefaultAppearance()
-
         navigationItem.title = "Tweet"
     }
 
@@ -80,10 +103,7 @@ final class TweetController: UIViewController {
 
     private func configureCollectionView() {
         view.addSubview(collectionView)
-
-        collectionView.snp.makeConstraints({
-            $0.edges.equalToSuperview()
-        })
+        collectionView.snp.makeConstraints { $0.edges.equalToSuperview() }
 
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -92,30 +112,22 @@ final class TweetController: UIViewController {
         collectionView.register(TweetHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CellIdentifier.tweetHeader)
     }
 
-    // MARK: - Functions
-
-    // MARK: - Bind ViewModels
+    // MARK: - ViewModel Bindings
 
     private func bindViewModel() {
-
         viewModel.onRepliesFetchSuccess = { [weak self] in
-            guard let self else { return }
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-            }
+            self?.collectionView.reloadData()
         }
 
         viewModel.onLikeSuccess = { [weak self] in
-            guard let self else { return }
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-            }}
+            self?.collectionView.reloadData()
+        }
 
         viewModel.fetchReplies()
     }
-
-
 }
+
+// MARK: - UICollectionViewDataSource
 
 extension TweetController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -127,102 +139,92 @@ extension TweetController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
 
-        let tweetViewModel = TweetViewModel(tweet: viewModel.replies[indexPath.item], repository: repository, useCase: useCase)
+        let reply = viewModel.replies[indexPath.item]
+        let tweetViewModel = TweetViewModel(
+            tweet: reply,
+            repository: repository,
+            useCase: useCase,
+            userViewModel: userViewModel,
+            userRepository: userRepository
+        )
 
         cell.viewModel = tweetViewModel
         return cell
     }
 
+    // 헤더 뷰 (원본 트윗 정보)
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CellIdentifier.tweetHeader, for: indexPath) as? TweetHeader else {
             return UICollectionReusableView()
         }
-        let tweetHeaderViewModel = TweetHeaderViewModel(tweet: viewModel.getTweet())
+
+        let tweetHeaderViewModel = TweetHeaderViewModel(tweet: viewModel.getTweet(), followUseCase: followUseCase)
         header.viewModel = tweetHeaderViewModel
+
         header.viewModel?.handleShowActionSheet = { [weak self] in
             guard let self else { return }
-            let userViewModel = UserViewModel(user: viewModel.getUser())
-            let actionSheetViewModel = ActionSheetViewModel(userviewModel: userViewModel, useCase: followUseCase)
+            let userVM = UserViewModel(user: viewModel.getUser(), followUseCase: followUseCase)
+            let actionSheetVM = ActionSheetViewModel(userviewModel: userVM, useCase: followUseCase)
+
             DispatchQueue.main.async {
-                self.router.presentActionSheet(viewModel: actionSheetViewModel, from: self)
+                self.router.presentActionSheet(viewModel: actionSheetVM, from: self)
             }
         }
+
         return header
     }
 }
 
-extension TweetController: UICollectionViewDelegate {
+// MARK: - UICollectionViewDelegate
 
-}
+extension TweetController: UICollectionViewDelegate {}
+
+// MARK: - 셀/헤더 동적 높이 계산
 
 extension TweetController: UICollectionViewDelegateFlowLayout {
-
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let width = collectionView.frame.width
-        return CGSize(width: width, height: estimatedHeight(isHeader: true))
+        return CGSize(width: collectionView.frame.width, height: estimatedHeight(isHeader: true))
     }
-
-
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        let width = collectionView.frame.width
         let tweet = viewModel.replies[indexPath.row]
-
-        print(estimatedHeight(tweet: tweet, isHeader: false))
-
-        return CGSize(width: width, height: estimatedHeight(tweet: tweet, isHeader: false))
+        return CGSize(width: collectionView.frame.width, height: estimatedHeight(tweet: tweet, isHeader: false))
     }
 
+    /// 셀/헤더 동적 높이 계산 로직 (레이아웃 잡힌 더미 뷰를 통해 측정)
     private func estimatedHeight(tweet: TweetModelProtocol? = nil, isHeader: Bool) -> CGFloat {
+        let width = collectionView.frame.width > 0 ? collectionView.frame.width : UIScreen.main.bounds.width
         let dummy: UIView
 
-        // collectionView width가 아직 0인 경우 대비
-        let safeWidth = collectionView.frame.width > 0 ? collectionView.frame.width : UIScreen.main.bounds.width
-
         if isHeader {
-            let dummyHeader = TweetHeader()
-
-            if let tweet = tweet {
-                dummyHeader.viewModel = TweetHeaderViewModel(tweet: tweet)
+            let header = TweetHeader()
+            if let tweet {
+                header.viewModel = TweetHeaderViewModel(tweet: tweet, followUseCase: followUseCase)
             }
-
-            dummyHeader.frame = CGRect(x: 0, y: 0, width: safeWidth, height: 1000)
-            dummyHeader.setNeedsLayout()
-            dummyHeader.layoutIfNeeded()
-            dummy = dummyHeader
+            header.frame = CGRect(x: 0, y: 0, width: width, height: 1000)
+            header.layoutIfNeeded()
+            dummy = header
         } else {
-            let dummyCell = TweetCell()
-
-
-            dummyCell.frame = CGRect(x: 0, y: 0, width: safeWidth, height: 1000)
-
-
-            if let tweet = tweet {
-                dummyCell.viewModel = TweetViewModel(tweet: tweet, repository: repository, useCase: useCase)
+            let cell = TweetCell()
+            if let tweet {
+                cell.viewModel = TweetViewModel(tweet: tweet, repository: repository, useCase: useCase, userViewModel: userViewModel, userRepository: userRepository)
             }
-
-            dummyCell.setNeedsLayout()
-            dummyCell.layoutIfNeeded()
-            dummy = dummyCell.contentView
+            cell.frame = CGRect(x: 0, y: 0, width: width, height: 1000)
+            cell.layoutIfNeeded()
+            dummy = cell.contentView
         }
 
-        let targetSize = CGSize(width: safeWidth, height: UIView.layoutFittingCompressedSize.height)
-
-        var estimatedSize = dummy.systemLayoutSizeFitting(
+        let targetSize = CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)
+        var estimated = dummy.systemLayoutSizeFitting(
             targetSize,
             withHorizontalFittingPriority: .required,
             verticalFittingPriority: .fittingSizeLevel
         )
 
-        // 최소 높이 설정 (예: 프로필 헤더는 기본적으로 일정 높이 이상 유지)
         if isHeader {
-            estimatedSize.height = max(estimatedSize.height, 200)
+            estimated.height = max(estimated.height, 200)
         }
 
-        return estimatedSize.height
+        return estimated.height
     }
-
-
 }
-

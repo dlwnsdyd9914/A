@@ -83,7 +83,7 @@ final class ProfileHeader: UICollectionReusableView {
     private let bioLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 16)
         $0.numberOfLines = 0
-        $0.text = "TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestT"
+        $0.text = "TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestT"
         $0.lineBreakMode = .byWordWrapping
         $0.translatesAutoresizingMaskIntoConstraints = false
 
@@ -146,6 +146,9 @@ final class ProfileHeader: UICollectionReusableView {
 
         editFollowButton.clipsToBounds = true
         editFollowButton.layer.cornerRadius = editFollowButton.frame.height / 2
+
+        // ✅ 핵심 라인
+            bioLabel.preferredMaxLayoutWidth = bioLabel.frame.width
     }
 
     // MARK: - Selectors
@@ -225,10 +228,14 @@ final class ProfileHeader: UICollectionReusableView {
 
     private func bindViewModel() {
         guard let viewModel else { return }
-        usernameLabel.text = viewModel.username
-        fullnameLabel.text = viewModel.fullname
-        profileImageView.kf.setImage(with: viewModel.profileImageUrl)
-        editFollowButton.setTitle(viewModel.actionButtonTitle, for: .normal)
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.bioLabel.text = viewModel.bio
+            self.usernameLabel.text = viewModel.username
+            self.fullnameLabel.text = viewModel.fullname
+            self.profileImageView.kf.setImage(with: viewModel.profileImageUrl)
+            self.editFollowButton.setTitle(viewModel.actionButtonTitle, for: .normal)
+        }
 
         viewModel.onFollowStatusCheck = { [weak self] followStatus in
             guard let self else { return }

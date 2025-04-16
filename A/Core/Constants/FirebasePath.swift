@@ -20,9 +20,10 @@ enum FirebasePath {
     static let userReplies = db.child("user-tweet-replies")
     static let tweetLikes = db.child("tweet-likes")
     static let userLikes = db.child("user-likes")
-    static let userFeed = db.child("user-feed")
+    static let userFeeds = db.child("user-feed")
     static let notifications = db.child("notifications")
     static let userNotifications = db.child("user-notifications")
+    static let usernames = db.child("user-names")
 
     static let storage = Storage.storage().reference()
     static let profileImages = storage.child("user-profiles")

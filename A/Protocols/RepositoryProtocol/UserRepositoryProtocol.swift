@@ -15,4 +15,7 @@ protocol UserRepositoryProtocol {
     func checkFollowStatus(uid: String, completion: @escaping (Bool) -> Void)
     func getFollowCount(uid: String, completion: @escaping (Int, Int) -> Void)
     func fetchSelectedUser(uid: String, completion: @escaping (Result<User, UserServiceError>) -> Void)
+    func saveUserData(fullName: String, userName: String, bio: String, completion: @escaping ((Result<Void, Error>) -> Void))
+    func updateProfileImage(image: UIImage, completion: @escaping ((Result<String, Error>) -> Void))
+    func fetchUser(username: String, completion: @escaping (Result<UserModelProtocol, UserServiceError>) -> Void)
 }

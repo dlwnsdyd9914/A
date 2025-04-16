@@ -2,8 +2,6 @@
 //  ExplorerController.swift
 //  A
 //
-//  Created by 이준용 on 4/10/25.
-//
 
 import UIKit
 import SwiftUI
@@ -11,27 +9,30 @@ import SnapKit
 import Then
 
 /// 사용자 탐색 화면 (Explorer)
-/// - 기능: 사용자 리스트 출력 및 검색
-/// - 사용 기술: UIKit, MVVM, UISearchController, SnapKit, Then
+/// - 기능: 전체 유저 목록 표시 + UISearchController 기반 사용자 검색 기능 제공
+/// - 아키텍처: MVVM + Router 구조
+/// - 의존성: FollowUseCase, UserRepository, UserViewModel, Router 주입 방식 사용
+/// - 부가 기능: NotificationCenter를 통해 유저 정보 변경을 실시간 반영
 final class ExplorerController: UIViewController {
 
-    // MARK: - Properties
+    // MARK: - Properties (UI + DI + 상태)
 
-    /// 사용자 목록을 보여주는 테이블뷰
+    /// 사용자 목록을 출력하는 테이블 뷰
     private let tableView = UITableView(frame: .zero, style: .plain)
 
-    /// 사용자 검색을 위한 서치 컨트롤러
+    /// 사용자 검색 기능을 위한 UISearchController
     private let searchController = UISearchController(searchResultsController: nil)
 
+    /// 유저 프로필 화면 전환을 위한 라우터
     private let router: ExplorerRouterProtocol
 
+    /// 팔로우/언팔로우 기능 유즈케이스
+    private let folloWUseCase: FollowUseCaseProtocol
 
-
-    
 
     // MARK: - View Models
 
-    /// 사용자 검색 및 데이터 필터링을 담당하는 뷰모델
+    /// 검색 결과 및 유저 목록을 관리하는 탐색 전용 뷰모델
     private let viewModel: ExplorerViewModel
 
     /// 현재 로그인된 사용자 정보
@@ -39,16 +40,23 @@ final class ExplorerController: UIViewController {
 
     // MARK: - Initializer
 
-    init(repository: UserRepositoryProtocol, userViewModel: UserViewModel, router: ExplorerRouterProtocol) {
-
-        self.viewModel = ExplorerViewModel(repository: repository)
+    /// DI 기반 생성자 - Repository, ViewModel, Router 외부 주입
+    init(repository: UserRepositoryProtocol, userViewModel: UserViewModel, router: ExplorerRouterProtocol, followUseCase: FollowUseCaseProtocol) {
+        self.viewModel = ExplorerViewModel(repository: repository, userViewModel: userViewModel)
         self.userViewModel = userViewModel
         self.router = router
+        self.folloWUseCase = followUseCase
         super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Deinitializer
+    /// Observer 해제 (메모리 누수 방지)
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - Life Cycle
@@ -65,22 +73,33 @@ final class ExplorerController: UIViewController {
         configureTableView()
         configureSearchController()
         bindViewModel()
+        registerNotificationObservers()
+    }
+
+    // MARK: - Selectors
+
+    /// NotificationCenter에서 유저 업데이트 수신 시 반영
+    @objc private func handleProfileUpdated(_ notification: Foundation.Notification) {
+        guard let updateUser = notification.object as? UserModelProtocol else { return }
+
+        self.viewModel.updatedUser(user: updateUser)
+        self.tableView.reloadData()
     }
 
     // MARK: - UI Configurations
 
-    /// 네비게이션 바 설정 (타이틀, 스타일)
+    /// 네비게이션 바 설정
     private func configureNavigationBar() {
         navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBar.setDefaultAppearance()
         navigationItem.title = "검색"
     }
 
-    /// 배경 색상 등 초기 UI 설정
+    /// 배경 색상 설정
     private func configureUI() {
         view.backgroundColor = .white
     }
 
-    /// 테이블뷰 설정 및 레이아웃 구성
+    /// 테이블 뷰 설정 (SnapKit으로 오토레이아웃 구성)
     private func configureTableView() {
         view.addSubview(tableView)
         tableView.snp.makeConstraints {
@@ -95,7 +114,7 @@ final class ExplorerController: UIViewController {
         tableView.register(UserCell.self, forCellReuseIdentifier: CellIdentifier.userCell)
     }
 
-    /// 서치 컨트롤러 설정
+    /// UISearchController 설정
     private func configureSearchController() {
         searchController.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -106,9 +125,14 @@ final class ExplorerController: UIViewController {
         searchController.searchResultsUpdater = self
     }
 
+    /// NotificationCenter 등록
+    private func registerNotificationObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleProfileUpdated), name: .didUpdateProfile, object: nil)
+    }
+
     // MARK: - Bind ViewModel
 
-    /// 뷰모델과 클로저 바인딩
+    /// ViewModel과 UI간 상태 바인딩
     private func bindViewModel() {
         viewModel.onFetchUserSuccess = { [weak self] in
             DispatchQueue.main.async {
@@ -141,8 +165,8 @@ extension ExplorerController: UITableViewDataSource {
         cell.selectionStyle = .none
 
         let user = viewModel.inSeaerchMode ? viewModel.filterUserList[indexPath.row] : viewModel.userList[indexPath.row]
-        let userViewModel = UserViewModel(user: user)
-        cell.configureUser(viewModel: userViewModel)
+        let userViewModel = UserViewModel(user: user, followUseCase: folloWUseCase)
+        cell.viewModel = userViewModel
 
         return cell
     }
@@ -154,7 +178,6 @@ extension ExplorerController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedUser = viewModel.inSeaerchMode ? viewModel.filterUserList[indexPath.row] : viewModel.userList[indexPath.row]
         router.navigateToUserProfile(user: selectedUser, from: self)
-
     }
 }
 
@@ -187,13 +210,19 @@ extension ExplorerController: UISearchResultsUpdating {
 // MARK: - SwiftUI Preview
 
 #Preview {
-    let mockUserViewModel = UserViewModel(user: MockUserModel(bio: "Test"))
+    let mockUserViewModel = UserViewModel(user: MockUserModel(bio: "Test"), followUseCase: MockFollowUseCase())
     let mockRepository = MockUserRepository()
     let mockRouter = MockExplorerRouter()
-    let diContainer = MockDiContainer()
 
     VCPreView {
-        UINavigationController(rootViewController: ExplorerController(repository: mockRepository, userViewModel: mockUserViewModel, router: mockRouter))
+        UINavigationController(
+            rootViewController: ExplorerController(
+                repository: mockRepository,
+                userViewModel: mockUserViewModel,
+                router: mockRouter,
+                followUseCase: MockFollowUseCase()
+            )
+        )
     }
     .edgesIgnoringSafeArea(.all)
 }

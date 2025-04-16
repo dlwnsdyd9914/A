@@ -15,4 +15,5 @@ protocol UserViewModelProtocol {
     var email: String { get }
     var didFollow: Bool { get set}
     func updateFollowState(_ followed: Bool)
+    func updateUserViewModel(user: UserModelProtocol)
 }

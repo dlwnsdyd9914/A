@@ -2,11 +2,24 @@
 //  AppDIContainer.swift
 //  A
 //
-//  Created by 이준용 on 4/10/25.
+
 //
 
 import UIKit
 
+/// 앱 전역에서 의존성 주입을 담당하는 DI 컨테이너입니다.
+///
+/// - 역할:
+///     - 서비스, 리포지토리, 유즈케이스, 라우터 객체를 생성 및 관리
+///     - 객체 간 의존성을 해소하고 주입 방식 통일
+///
+/// - 주요 사용처:
+///     - SceneDelegate 또는 AppCoordinator 등 앱 진입 지점에서 객체 생성 시 사용
+///     - 라우터 및 컨트롤러 생성 시 의존성 주입에 활용
+///
+/// - 설계 이유:
+///     - DIContainer를 통해 의존성 분리를 명확히 하여 테스트 용이성 및 유지보수성 향상
+///     - 중복 객체 생성을 피하고 전역적으로 통일된 인스턴스 사용을 보장
 final class AppDIContainer: AppDIContainerProtocol {
 
     // MARK: - Services (싱글톤 또는 재사용 가능한 인스턴스)
@@ -16,20 +29,20 @@ final class AppDIContainer: AppDIContainerProtocol {
     private lazy var tweetService = TweetService()
     private lazy var notificationService = NotificationService()
 
-    // MARK: - Routers (필요 시 한 번만 생성)
+    // MARK: - 라우터 (한 번만 생성)
 
     private lazy var mainTabRouter: MainTabBarRouterProtocol = {
         return MainTabRouter(loginUseCase: makeLoginUseCase())
     }()
 
-    // MARK: - Services Factory
+    // MARK: - Service Factory
 
     func makeAuthService() -> AuthService { authService }
     func makeUserService() -> UserService { userService }
     func makeTweetService() -> TweetService { tweetService }
     func makeNotificationService() -> NotificationService { notificationService }
 
-    // MARK: - Repositories
+    // MARK: - Repository Factory
 
     func makeAuthRepository() -> AuthRepositoryProtocol {
         AuthRepository(service: makeAuthService())
@@ -47,7 +60,7 @@ final class AppDIContainer: AppDIContainerProtocol {
         NotificationRepository(service: makeNotificationService())
     }
 
-    // MARK: - UseCases
+    // MARK: - UseCase Factory
 
     func makeSignUpUseCase() -> SignUpUseCaseProtocol {
         SignUpUseCase(authRepository: makeAuthRepository())
@@ -78,20 +91,33 @@ final class AppDIContainer: AppDIContainerProtocol {
     }
 
     func makeNotificationUseCase() -> NotificationUseCaseProtocol {
-        NotificationUseCase(repository: makeNotificationRepository(), userRepository: makeUserRepository(), tweetRepository: makeTweetRepository())
+        NotificationUseCase(
+            repository: makeNotificationRepository(),
+            userRepository: makeUserRepository(),
+            tweetRepository: makeTweetRepository()
+        )
     }
 
-    // MARK: - Routers
+    func makeProfileUseCase() -> ProfileUseCaseProtocol {
+        ProfileUseCase(repository: makeTweetRepository())
+    }
+
+    func makeEditUseCase() -> EditUseCaseProtocol {
+        EditUseCase(repository: makeUserRepository())
+    }
+
+    // MARK: - Router Factory
 
     func makeAuthRouter() -> AuthRouterProtocol {
-        return AuthRouter(
+        AuthRouter(
             userRepository: makeUserRepository(),
             explorerRouter: makeExplorerRouter(),
             signUpUseCase: makeSignUpUseCase(),
             logoutUseCase: makeLogoutUseCase(),
             tweetReposiotry: makeTweetRepository(),
             tweetLikeUseCase: makeTweetLikeUseCase(),
-            notificationUseCase: makeNotificationUseCase()
+            notificationUseCase: makeNotificationUseCase(),
+            followUseCase: makeFollowUseCase()
         )
     }
 
@@ -107,10 +133,12 @@ final class AppDIContainer: AppDIContainerProtocol {
         FeedRouter(
             mainTabRouter: makeMainTabBarRouter(),
             tweetRepository: makeTweetRepository(),
-            tweetRouter: makeTweetRouter(),
             uploadTweetRouter: makeUploadTweetRouter(),
             followUseCase: makeFollowUseCase(),
-            tweetLikeUseCase: makeTweetLikeUseCase()
+            tweetLikeUseCase: makeTweetLikeUseCase(),
+            profileUseCase: makeProfileUseCase(),
+            userRepository: makeUserRepository(),
+            editUseCase: makeEditUseCase()
         )
     }
 
@@ -120,7 +148,10 @@ final class AppDIContainer: AppDIContainerProtocol {
             feedRouter: makeFeedRouter(),
             tweetRepostiory: makeTweetRepository(),
             followUseCase: makeFollowUseCase(),
-            tweetLikeUseCase: makeTweetLikeUseCase()
+            tweetLikeUseCase: makeTweetLikeUseCase(),
+            profileUseCase: makeProfileUseCase(),
+            userRepository: makeUserRepository(),
+            editUseCase: makeEditUseCase()
         )
     }
 
@@ -128,7 +159,9 @@ final class AppDIContainer: AppDIContainerProtocol {
         TweetRouter(
             tweetRepository: makeTweetRepository(),
             tweetLikeUseCase: makeTweetLikeUseCase(),
-            followUseCase: makeFollowUseCase()
+            followUseCase: makeFollowUseCase(),
+            feedRouter: makeFeedRouter(),
+            userRepository: makeUserRepository()
         )
     }
 }

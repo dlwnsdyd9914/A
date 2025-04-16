@@ -2,7 +2,6 @@
 //  LoginViewController.swift
 //  A
 //
-//  Created by 이준용 on 4/10/25.
 //
 
 import UIKit
@@ -10,51 +9,62 @@ import SwiftUI
 import Then
 import SnapKit
 
-/// 앱의 로그인 화면 컨트롤러입니다.
-/// UI 구성은 코드 기반으로 이루어졌으며, SnapKit + Then을 사용해 선언형으로 구현되어 있습니다.
+/// 로그인 화면 컨트롤러
+/// - MVVM 아키텍처 기반
+/// - 이메일/비밀번호 입력 → 유효성 검증 → 로그인 요청 → 성공 시 홈화면 전환
+/// - SnapKit + Then으로 UI를 코드 기반으로 구성
 final class LoginViewController: UIViewController {
 
-    // MARK: - Properties
+    // MARK: - Dependencies
 
-    /// 화면 이동 처리를 담당하는 라우터
+    /// 로그인 후 전환 및 회원가입 전환을 담당하는 라우터
     private let router: AuthRouterProtocol
 
     // MARK: - View Models
 
-    /// 로그인 관련 비즈니스 로직을 처리하는 뷰모델
+    /// 로그인 로직, 입력값 검증, 인증 처리 등을 담당하는 ViewModel
     private let viewModel: LoginViewModel
 
     // MARK: - UI Components
 
-    /// 앱 메인 로고 이미지 뷰
+    /// 앱 로고 이미지
     private let logoImageView = UIImageView().then {
         $0.image = .mainLogo
     }
 
-    /// 이메일 입력 텍스트 필드
+    /// 이메일 입력 필드
     private let emailTextField = CustomTextField(type: .email).then {
         $0.keyboardType = .emailAddress
     }
 
-    /// 이메일 입력 필드를 담은 뷰 (아이콘 포함)
-    private lazy var emailInputContainerView = InputContainerView(textFieldImage: .emailImage, textField: emailTextField)
+    /// 이메일 입력 필드 + 아이콘 포함한 컨테이너
+    private lazy var emailInputContainerView = InputContainerView(
+        textFieldImage: .emailImage,
+        textField: emailTextField
+    )
 
-    /// 비밀번호 입력 텍스트 필드
+    /// 비밀번호 입력 필드
     private let passwordTextField = CustomTextField(type: .password).then {
         $0.isSecureTextEntry = true
     }
 
-    /// 비밀번호 입력 필드를 담은 뷰 (아이콘 포함)
-    private lazy var passwordInputContainerView = InputContainerView(textFieldImage: .passwordImage, textField: passwordTextField)
+    /// 비밀번호 입력 필드 컨테이너
+    private lazy var passwordInputContainerView = InputContainerView(
+        textFieldImage: .passwordImage,
+        textField: passwordTextField
+    )
 
-    /// 이메일 + 비밀번호 필드 스택
-    private lazy var loginStackView = UIStackView(arrangedSubviews: [emailInputContainerView, passwordInputContainerView]).then {
+    /// 로그인 입력 필드들을 묶는 스택뷰
+    private lazy var loginStackView = UIStackView(arrangedSubviews: [
+        emailInputContainerView,
+        passwordInputContainerView
+    ]).then {
         $0.axis = .vertical
         $0.spacing = 8
         $0.distribution = .fillEqually
     }
 
-    /// 로그인 버튼
+    /// 로그인 실행 버튼 (입력값이 유효할 때 활성화됨)
     private lazy var loginButton = UIButton(type: .custom).then {
         $0.setTitle("Login", for: .normal)
         $0.setTitleColor(.buttonTitleDisabled, for: .normal)
@@ -66,16 +76,21 @@ final class LoginViewController: UIViewController {
         $0.addTarget(self, action: #selector(handleLoginButtonTapped), for: .touchUpInside)
     }
 
-    /// 회원가입 유도 텍스트 버튼
+    /// 회원가입 화면으로 전환하는 버튼
     private lazy var registerButton = UIButton(type: .custom).then {
-        let attrbiutedTitle = $0.makeAttributedTitle(font: Fonts.authBottomButtonTitle, color: .textTitle, firstText: "계정이 없으신가요?", secondText: " 가입 하세요!")
+        let attrbiutedTitle = $0.makeAttributedTitle(
+            font: Fonts.authBottomButtonTitle,
+            color: .textTitle,
+            firstText: "계정이 없으신가요?",
+            secondText: " 가입 하세요!"
+        )
         $0.setAttributedTitle(attrbiutedTitle, for: .normal)
         $0.addTarget(self, action: #selector(handleRegisterButtonTapped), for: .touchUpInside)
     }
 
     // MARK: - Initializer
 
-    /// 라우터와 로그인 유즈케이스를 주입받아 뷰모델을 구성
+    /// 라우터와 유즈케이스를 주입받아 ViewModel 구성
     init(router: AuthRouterProtocol, loginUseCase: LoginUseCaseProtocol) {
         self.router = router
         self.viewModel = LoginViewModel(loginUseCase: loginUseCase)
@@ -83,7 +98,7 @@ final class LoginViewController: UIViewController {
     }
 
     required init?(coder: NSCoder) {
-        fatalError()
+        fatalError("Storyboard 미사용")
     }
 
     // MARK: - Life Cycle
@@ -97,19 +112,19 @@ final class LoginViewController: UIViewController {
         bindViewModel()
     }
 
-    // MARK: - Selectors (사용자 인터랙션 핸들러)
+    // MARK: - Selectors
 
-    /// 로그인 버튼 눌렀을 때
+    /// 로그인 버튼 탭 시 → 로그인 요청 전달
     @objc private func handleLoginButtonTapped() {
         viewModel.login()
     }
 
-    /// 회원가입 버튼 눌렀을 때
+    /// 회원가입 버튼 탭 시 → 회원가입 화면으로 전환
     @objc private func handleRegisterButtonTapped() {
         router.navigate(to: .register, from: self)
     }
 
-    /// 텍스트필드 값 변경될 때 뷰모델에 바인딩
+    /// 텍스트 필드 변경 시 → ViewModel로 바인딩
     @objc private func handleTextFieldChange(textField: CustomTextField) {
         guard let text = textField.text,
               let type = textField.fieldType else { return }
@@ -118,14 +133,16 @@ final class LoginViewController: UIViewController {
 
     // MARK: - UI Configurations
 
-    /// 배경색 및 초기 UI 세팅
+    /// 전체 배경 및 초기 설정
     private func configureUI() {
-        self.view.backgroundColor = .backGround
+        view.backgroundColor = .backGround
     }
 
     /// 뷰 계층 구성
     private func addSubviews() {
-        [logoImageView, loginStackView, loginButton, registerButton].forEach { self.view.addSubview($0) }
+        [logoImageView, loginStackView, loginButton, registerButton].forEach {
+            view.addSubview($0)
+        }
     }
 
     /// 전체 컴포넌트 오토레이아웃 설정 진입점
@@ -136,7 +153,6 @@ final class LoginViewController: UIViewController {
         setRegisterButtonConstraints()
     }
 
-    /// 로고 오토레이아웃 설정
     private func setLogoImageViewConstraints() {
         logoImageView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -169,34 +185,35 @@ final class LoginViewController: UIViewController {
         }
     }
 
-    // MARK: - Functions
+    // MARK: - Alert 처리
 
-    /// 로그인 실패 시 사용자에게 에러 메시지 표시
+    /// 로그인 실패 시 Alert 노출
     private func authErrorAlert(message: String) {
         let alert = UIAlertController(title: "오류", message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "확인", style: .default)
-        alert.addAction(okAction)
-        self.present(alert, animated: true)
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        present(alert, animated: true)
     }
 
-    /// 텍스트필드 초기화
+    /// 로그인 성공 후 필드 초기화
     private func clearTextFields() {
-        self.emailTextField.text = ""
-        self.passwordTextField.text = ""
+        emailTextField.text = ""
+        passwordTextField.text = ""
     }
 
-    // MARK: - Bind ViewModels
+    // MARK: - ViewModel 바인딩
 
-    /// 뷰모델과 클로저 바인딩
+    /// ViewModel에서 전달되는 상태를 바탕으로 UI 업데이트
     private func bindViewModel() {
-        viewModel.onValidationChange = { [weak self] status, buttonColor in
-            guard let self = self else { return }
+        // 입력 유효성 변경 시 로그인 버튼 상태 변경
+        viewModel.onValidationChange = { [weak self] isValid, buttonColor in
+            guard let self else { return }
             DispatchQueue.main.async {
-                self.loginButton.isEnabled = status
+                self.loginButton.isEnabled = isValid
                 self.loginButton.backgroundColor = buttonColor
             }
         }
 
+        // 로그인 성공 시 → 텍스트 초기화 + 홈 화면 전환
         viewModel.onSuccess = { [weak self] in
             guard let self else { return }
             print("📲 LoginViewController - onSuccess 클로저 실행됨")
@@ -207,6 +224,7 @@ final class LoginViewController: UIViewController {
             }
         }
 
+        // 로그인 실패 시 → 에러 Alert
         viewModel.onFail = { [weak self] errorMessage in
             guard let self else { return }
             DispatchQueue.main.async {
@@ -215,7 +233,7 @@ final class LoginViewController: UIViewController {
         }
     }
 
-    /// 텍스트필드 이벤트 바인딩 (editingChanged)
+    /// 텍스트필드 값 변경 → ViewModel에 바인딩
     private func bindTextField() {
         [emailTextField, passwordTextField].forEach {
             $0.addTarget(self, action: #selector(handleTextFieldChange), for: .editingChanged)

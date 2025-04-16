@@ -9,8 +9,6 @@ import UIKit
 
 protocol UploadTweetRouterProtocol {
 
-    func dismiss(from viewController: UIViewController)
-
     func navigate(to destination: TweetDestination, from viewController: UIViewController)
 
     func close(style presentationStyle: UploadTweetPresentationStyle, from viewController: UIViewController)

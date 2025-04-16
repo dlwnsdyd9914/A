@@ -30,6 +30,8 @@ protocol AppDIContainerProtocol {
     func makeFetchTweetWithRepliesUseCase() -> FetchTweetWithRepliesUseCaseProtocol
     func makeTweetLikeUseCase() -> TweetLikeUseCaseProtocol
     func makeNotificationUseCase() -> NotificationUseCaseProtocol
+    func makeProfileUseCase() -> ProfileUseCaseProtocol
+    func makeEditUseCase() -> EditUseCaseProtocol
 
     // MARK: - Routers
     func makeAuthRouter() -> AuthRouterProtocol

@@ -15,4 +15,6 @@ protocol TweetRepositoryProtocol {
     func fetchTweetReplies(tweetId: String, completion: @escaping (Result<Tweet, TweetServiceError>) -> Void)
     func likesTweet(tweet: TweetModelProtocol, completion: @escaping (Result<Bool, TweetServiceError>) -> Void)
     func likesStatus(tweet: any TweetModelProtocol, completion: @escaping (Bool) -> Void)
+    func fetchTweetLikes(uid: String, completion: @escaping ((Tweet?) -> Void))
+    func fetchReplies(uid: String, completion: @escaping (Result<Tweet, TweetServiceError>) -> Void)
 }

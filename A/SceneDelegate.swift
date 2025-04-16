@@ -10,7 +10,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    
+
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -34,6 +34,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let uploadTweetRouter = di.makeUploadTweetRouter()
         let followUseCase = di.makeFollowUseCase()
         let notificationUseCase = di.makeNotificationUseCase()
+        let profileUseCase = di.makeProfileUseCase()
+        let editUseCase = di.makeEditUseCase()
 
         // MARK: - Router 초기화
         let authRouter = AuthRouter(
@@ -43,21 +45,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             logoutUseCase: logoutUseCase,
             tweetReposiotry: tweetRepository,
             tweetLikeUseCase: tweetLikeUseCase,
-            notificationUseCase: notificationUseCase
+            notificationUseCase: notificationUseCase,
+            followUseCase: followUseCase
         )
 
         let mainTabRouter = MainTabRouter(loginUseCase: loginUseCase)
-        let tweetRouter = TweetRouter(tweetRepository: tweetRepository, tweetLikeUseCase: tweetLikeUseCase, followUseCase: followUseCase)
+        let feedRouter = FeedRouter(mainTabRouter: mainTabRouter, tweetRepository: tweetRepository,  uploadTweetRouter: uploadTweetRouter, followUseCase: followUseCase, tweetLikeUseCase: tweetLikeUseCase, profileUseCase: profileUseCase, userRepository: userRepository, editUseCase: editUseCase)
 
+        let tweetRouter = TweetRouter(tweetRepository: tweetRepository, tweetLikeUseCase: tweetLikeUseCase, followUseCase: followUseCase, feedRouter: feedRouter, userRepository: userRepository)
 
-        let feedRouter = FeedRouter(mainTabRouter: mainTabRouter, tweetRepository: tweetRepository, tweetRouter: tweetRouter, uploadTweetRouter: uploadTweetRouter, followUseCase: followUseCase, tweetLikeUseCase: tweetLikeUseCase)
+        let notificationRouter = NotificationRouter(mainTabRouter: mainTabRouter, tweetRepository: tweetRepository, followUseCase: followUseCase, feedRouter: feedRouter, tweetLikeUseCase: tweetLikeUseCase, tweetRouter: tweetRouter, profileUseCase: profileUseCase, userRepository: userRepository, editUseCase: editUseCase)
 
         // Router 간 연결
         authRouter.injectMainTabRouter(mainTabRouter: mainTabRouter)
         authRouter.injectFeedRouter(feedRouter: feedRouter)
+        authRouter.injectNotificationRouter(notificationRouter: notificationRouter)
 
         mainTabRouter.setAuthRouter(authRouter: authRouter)
         mainTabRouter.setUploadTWeetRouter(uploadTweetRouter: uploadTweetRouter)
+
+        feedRouter.injectTweetRouter(tweetRouter: tweetRouter)
 
         // MARK: - Main VC 설정
         let mainTabVC = MainTabController(
@@ -67,7 +74,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             userRepository: userRepository,
             logoutUseCase: logoutUseCase,
             tweetRepository: tweetRepository,
-            tweetLikeUseCase: tweetLikeUseCase, notificationUseCase: notificationUseCase
+            tweetLikeUseCase: tweetLikeUseCase, notificationUseCase: notificationUseCase, notificationRouter: notificationRouter, followUseCase: followUseCase
         )
 
         self.window?.rootViewController = mainTabVC
@@ -75,7 +82,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
 
-    
+
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

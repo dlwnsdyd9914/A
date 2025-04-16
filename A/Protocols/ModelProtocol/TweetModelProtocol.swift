@@ -14,7 +14,7 @@ protocol TweetModelProtocol {
     var timeStamp: Date { get }
     var tweetId: String { get }
     var uid: String { get }
-    var user: User { get }
+    var user: UserModelProtocol { get }
     var didLike: Bool { get set }
     var replyingTo: String? { get set }
     var isRely: Bool { get }
