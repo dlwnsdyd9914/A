@@ -20,7 +20,7 @@ Presentation → UseCase → Repository → Service → 외부 API/Firebase
 > MVVM + UseCase + Repository + Router 기반 구조  
 > DIContainer를 통한 의존성 주입
 
-![Architecture](./docs/architecture_with_model.png)
+![Architecture](./docs/IMG_7099.png)
 
 
 ### ✅ MVVM 기반 UI 설계
