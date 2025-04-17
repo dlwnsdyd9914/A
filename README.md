@@ -95,7 +95,6 @@ UIKit, MVVM, Firebase (Auth, Realtime DB, Storage), SnapKit, Then, Kingfisher, A
 https://www.notion.so/A-1d8e121de2fd80959e3beeca802e8751?pvs=4
 ---
 
-# A (Twitter Clone 포트폴리오)
 
 ## 📂 프로젝트 구조
 
