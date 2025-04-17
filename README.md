@@ -16,6 +16,13 @@
 본 프로젝트는 유지보수성과 테스트 용이성을 위해 다음과 같은 구조를 따릅니다:
 Presentation → UseCase → Repository → Service → 외부 API/Firebase
 
+## 아키텍처 구조 다이어그램
+> MVVM + UseCase + Repository + Router 기반 구조  
+> DIContainer를 통한 의존성 주입
+
+![Architecture](./docs/architecture_with_model.png)
+
+
 ### ✅ MVVM 기반 UI 설계
 - ViewController는 UI 구성 및 이벤트 처리만 담당
 - ViewModel은 상태 관리와 비즈니스 로직 호출 전담
