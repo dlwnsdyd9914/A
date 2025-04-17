@@ -469,7 +469,6 @@
 				D3FD6E3A2DB0F63D002392B3 /* Domain */,
 				D3026BD22DA7CFDB00962AE3 /* Data */,
 				D3FD6E192DB0F11A002392B3 /* Presentation */,
-				D34762E42DA989280030D71E /* Factories */,
 				D37B09132DA78D9D00DA5F25 /* Info.plist */,
 			);
 			path = A;
@@ -724,6 +723,7 @@
 			children = (
 				D37B09342DA7909100DA5F25 /* Models */,
 				D3026BE02DA7E21100962AE3 /* UseCase */,
+				D34762E42DA989280030D71E /* Factories */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
