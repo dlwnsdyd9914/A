@@ -72,7 +72,6 @@ UIKit, MVVM, Firebase (Auth, Realtime DB, Storage), SnapKit, Then, Kingfisher, A
 - 프로필 화면 필터 (트윗, 리플, 좋아요 탭별 데이터 관리 및 표시)
 - 로그아웃 (루트 전환 및 세션 종료 처리)
 - 커스텀 알럿 (시스템 알럿 대체, 삭제 및 로그아웃 등 주요 액션 적용)
-- **동적 높이 계산** 이런식으로 깃헙 리드미에 들어가는 양식으로 바꿔줘
 
 
 ---
