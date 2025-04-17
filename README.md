@@ -4,7 +4,7 @@
 
 | 항목 | 내용 |
 |------|------|
-| 플랫폼 | iOS (UIKit 기반, iPhone 전용) |
+| 플랫폼 | iOS (UIKit 기반) |
 | 아키텍처 | MVVM + UseCase + Repository + Router |
 | 사용 기술 | UIKit, Firebase, SnapKit, Then, Kingfisher, ActiveLabel 등 |
 | 주요 기능 | 회원가입, 로그인, 트윗 CRUD, 팔로우/언팔로우, 멘션, 댓글, 좋아요, 프로필 수정, 실시간 동기화 등 |
@@ -14,6 +14,7 @@
 ##  아키텍처 설계
 
 본 프로젝트는 유지보수성과 테스트 용이성을 위해 다음과 같은 구조를 따릅니다:
+Presentation → UseCase → Repository → Service → 외부 API/Firebase
 
 ### ✅ MVVM 기반 UI 설계
 - ViewController는 UI 구성 및 이벤트 처리만 담당
@@ -68,9 +69,11 @@ UIKit, MVVM, Firebase (Auth, Realtime DB, Storage), SnapKit, Then, Kingfisher, A
 - 트윗 리플 (댓글 작성 및 실시간 댓글 목록 처리)
 - 멘션 기능 (ActiveLabel 기반 유저 멘션 및 프로필 이동 처리)
 - 프로필 수정 (닉네임, 소개, 이미지 변경 및 실시간 반영)
+- 프로필 화면 필터 (트윗, 리플, 좋아요 탭별 데이터 관리 및 표시)
 - 로그아웃 (루트 전환 및 세션 종료 처리)
 - 커스텀 알럿 (시스템 알럿 대체, 삭제 및 로그아웃 등 주요 액션 적용)
-- **동적 높이 계산** (트윗 및 댓글 셀의 높이를 내용에 맞게 자동 조절)
+- **동적 높이 계산** 이런식으로 깃헙 리드미에 들어가는 양식으로 바꿔줘
+
 
 ---
 
