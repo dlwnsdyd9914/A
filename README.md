@@ -18,6 +18,7 @@ Presentation → UseCase → Repository → Service → 외부 API/Firebase
 ## 아키텍처 구조 다이어그램
 > MVVM + UseCase + Repository + Router 기반 구조  
 > DIContainer를 통한 의존성 주입
+> 본 아키텍처 다이어그램은 실제 프로젝트 구조를 기반으로 직접 설계하였으며, DI 흐름과 각 계층 간 책임 관계를 시각화한 것입니다.
 
 ![Architecture](./IMG_7096.png)
 
