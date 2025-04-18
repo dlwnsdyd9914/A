@@ -92,16 +92,13 @@ Presentation → UseCase → Repository → Service → 외부 API/Firebase
 
 UIKit, MVVM, Firebase (Auth, Realtime DB, Storage), SnapKit, Then, Kingfisher, ActiveLabel
 
- UI는 전면 Programmatic UI 방식으로 구현되었으며,
-- SnapKit과 NSLayoutConstraint를 병행하여
-- 다양한 레이아웃 요구사항에 능동적으로 대응할 수 있도록 설계하였습니다
----
 
-### 📝 UI 구성 방식
+## 📝 UI 구성 방식
 
-- UI는 전면 **Programmatic UI** 방식으로 구현하였으며,  
-- **SnapKit**과 **NSLayoutConstraint**를 각각 적용해
+- UI는 **Programmatic UI** 방식으로 구성  
+- **SnapKit**과 **NSLayoutConstraint**를 적용
 - 두 방식 모두 능숙하게 대응 가능한 역량을 보여주고자 구성하였습니다.
+
 
 ## ✨ 주요 기능
 
