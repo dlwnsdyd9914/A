@@ -48,6 +48,7 @@ Presentation → UseCase → Repository → Service → 외부 API/Firebase
 - ViewController는 UI 구성 및 이벤트 처리만 담당
 - ViewModel은 상태 관리와 비즈니스 로직 호출 전담
 - View ↔ ViewModel 간 클로저 바인딩으로 의존성 최소화
+- SnapKit과 NSLayoutConstraint를 모두 활용하여, 요구되는 다양한 UI 구성 방식에 능동적으로 대응이 
 
 ### ✅ UseCase 중심의 비즈니스 로직 분리
 - 모든 주요 기능은 ViewModel이 직접 처리하지 않고
@@ -91,7 +92,16 @@ Presentation → UseCase → Repository → Service → 외부 API/Firebase
 
 UIKit, MVVM, Firebase (Auth, Realtime DB, Storage), SnapKit, Then, Kingfisher, ActiveLabel
 
+ UI는 전면 Programmatic UI 방식으로 구현되었으며,
+- SnapKit과 NSLayoutConstraint를 병행하여
+- 다양한 레이아웃 요구사항에 능동적으로 대응할 수 있도록 설계하였습니다
 ---
+
+### 📝 UI 구성 방식
+
+- UI는 전면 **Programmatic UI** 방식으로 구현하였으며,  
+- **SnapKit**과 **NSLayoutConstraint**를 각각 적용해
+- 두 방식 모두 능숙하게 대응 가능한 역량을 보여주고자 구성하였습니다.
 
 ## ✨ 주요 기능
 
