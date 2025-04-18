@@ -127,6 +127,8 @@ https://www.notion.so/A-1d8e121de2fd80959e3beeca802e8751?pvs=4
 
 ## 📂 프로젝트 구조
 
+
+
 ```bash
 A/
 ├── App/                         # 앱 진입점 및 DI 관련
@@ -164,5 +166,10 @@ A/
     ├── Alert/                   # 커스텀 얼럿
     ├── Router/                  # 화면 전환 담당 라우터
     └── Common/                  # 공통 UI 컴포넌트
+```
+---
+## 🚀 실행 방법
+- 본 프로젝트는 CocoaPods와 Swift Package Manager(SPM)를 통해 외부 라이브러리를 관리하며,
+- 모든 의존성 관련 파일이 포함되어 있어 .xcworkspace 파일을 Xcode에서 열면 별도 설정 없이 바로 실행이 가능합니다
 
 
