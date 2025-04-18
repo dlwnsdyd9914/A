@@ -8,6 +8,7 @@
 | 사용 기술 | UIKit, Firebase, SnapKit, Then, Kingfisher, ActiveLabel |
 | 주요 기능 | 회원가입, 로그인, 트윗 CRUD, 팔로우/언팔로우, 멘션, 댓글, 좋아요, 프로필 수정, 실시간 동기화  |
 
+
 ---
 
 ##  아키텍처 설계
@@ -48,6 +49,7 @@ Presentation → UseCase → Repository → Service → 외부 API/Firebase
 - ViewController는 UI 구성 및 이벤트 처리만 담당
 - ViewModel은 상태 관리와 비즈니스 로직 호출 전담
 - View ↔ ViewModel 간 클로저 바인딩으로 의존성 최소화
+- SnapKit과 NSLayoutConstraint를 모두 활용하여, 요구되는 다양한 UI 구성 방식에 능동적으로 대응이 
 
 ### ✅ UseCase 중심의 비즈니스 로직 분리
 - 모든 주요 기능은 ViewModel이 직접 처리하지 않고
@@ -91,15 +93,12 @@ Presentation → UseCase → Repository → Service → 외부 API/Firebase
 
 UIKit, MVVM, Firebase (Auth, Realtime DB, Storage), SnapKit, Then, Kingfisher, ActiveLabel
 
-
 ---
 
 ## 📝 UI 구성 방식
 
 - UI는 **Programmatic UI** 방식으로 구성  
-- **SnapKit**/**NSLayoutConstraint** 적용
-- 두 방식 모두 능숙하게 대응 가능한 역량을 보여주고자 구성하였습니다.
-
+- **SnapKit**과 **NSLayoutConstraint**를 모두 활용하여, 다양한 레이아웃 요구사항에 능동적으로 대응할 수 있는 역량을 보여주고자 설계하였습니다.
 
 ---
 
@@ -119,8 +118,6 @@ UIKit, MVVM, Firebase (Auth, Realtime DB, Storage), SnapKit, Then, Kingfisher, A
 - 커스텀 알럿 (삭제/팔로우 등 대응)
 - 로그아웃 (루트 전환 및 세션 종료 처리)
 
-
-
 ---
 
 ## 🎯 주요 설계 포인트
@@ -131,22 +128,24 @@ UIKit, MVVM, Firebase (Auth, Realtime DB, Storage), SnapKit, Then, Kingfisher, A
 - 단일 책임 원칙(SRP)에 기반한 계층 설계
 
 ---
+
 ## 💬 기타
 
 - 현재 테스트 코드는 포함되어 있지 않으며, 추후 `XCTest` 기반 유닛 테스트를 추가할 계획입니다.
 - 채팅 기능, 실시간 알림, GIF 이미지 업로드 등은 기능 확장을 통해 순차적으로 구현할 예정입니다.
 
 ---
+
+
 ## 📸 데모 GIF
 
-> 
-https://www.notion.so/A-1d8e121de2fd80959e3beeca802e8751?pvs=4
+>
+[👉 데모 영상  (Notion 링크)](https://www.notion.so/A-1d8e121de2fd80959e3beeca802e8751?pvs=4)
+
 ---
 
 
 ## 📂 프로젝트 구조
-
-
 
 ```bash
 A/
@@ -187,6 +186,8 @@ A/
     └── Common/                  # 공통 UI 컴포넌트
 ```
 ---
+
+
 ## 🚀 실행 방법
 
 - 본 프로젝트는 **CocoaPods**, **Swift Package Manager (SPM)** 를 통해 외부 라이브러리를 관리합니다.  
