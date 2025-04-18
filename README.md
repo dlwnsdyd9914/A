@@ -48,7 +48,6 @@ Presentation → UseCase → Repository → Service → 외부 API/Firebase
 - ViewController는 UI 구성 및 이벤트 처리만 담당
 - ViewModel은 상태 관리와 비즈니스 로직 호출 전담
 - View ↔ ViewModel 간 클로저 바인딩으로 의존성 최소화
-- SnapKit과 NSLayoutConstraint를 모두 활용하여, 요구되는 다양한 UI 구성 방식에 능동적으로 대응이 
 
 ### ✅ UseCase 중심의 비즈니스 로직 분리
 - 모든 주요 기능은 ViewModel이 직접 처리하지 않고
