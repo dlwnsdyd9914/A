@@ -169,7 +169,9 @@ A/
 ```
 ---
 ## 🚀 실행 방법
-- 본 프로젝트는 CocoaPods와 Swift Package Manager(SPM)를 통해 외부 라이브러리를 관리하며,
-- 모든 의존성 관련 파일이 포함되어 있어 .xcworkspace 파일을 Xcode에서 열면 별도 설정 없이 바로 실행이 가능합니다
+
+- 본 프로젝트는 **CocoaPods**와 **Swift Package Manager (SPM)** 를 통해 외부 라이브러리를 관리합니다.  
+- 모든 의존성 관련 파일이 포함되어 있으므로, `.xcworkspace` 파일을 **Xcode에서 열기만 하면** 별도 설정 없이 바로 실행할 수 있습니다.
+
 
 
