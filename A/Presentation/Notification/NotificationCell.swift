@@ -76,6 +76,7 @@ final class NotificationCell: UITableViewCell {
         super.layoutSubviews()
         // 프로필 이미지 및 팔로우 버튼 라운딩
         profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
+        followButton.layoutIfNeeded()
         followButton.layer.cornerRadius = followButton.frame.height / 2
     }
 
