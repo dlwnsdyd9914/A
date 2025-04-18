@@ -98,7 +98,7 @@ UIKit, MVVM, Firebase (Auth, Realtime DB, Storage), SnapKit, Then, Kingfisher, A
 ## 📝 UI 구성 방식
 
 - UI는 **Programmatic UI** 방식으로 구성  
-- **SnapKit**과 **NSLayoutConstraint**를 모두 활용하여, 다양한 레이아웃 요구사항에 능동적으로 대응할 수 있는 역량을 보여주고자 설계하였습니다.
+- **SnapKit**과 **NSLayoutConstraint**를 모두 활용하여, 다양한 레이아웃 요구사항에 능동적으로 대응할 수 있는 역량을 보여주고자 구현하였습니다.
 
 ---
 
