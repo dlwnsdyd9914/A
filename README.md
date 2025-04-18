@@ -6,7 +6,7 @@
 | 플랫폼 | iOS (UIKit 기반) |
 | 아키텍처 | MVVM + UseCase + Repository + Router |
 | 사용 기술 | UIKit, Firebase, SnapKit, Then, Kingfisher, ActiveLabel |
-| 주요 기능 | 회원가입, 로그인, 트윗 CRUD, 팔로우/언팔로우, 멘션, 댓글, 좋아요, 프로필 수정, 실시간 동기화 등 |
+| 주요 기능 | 회원가입, 로그인, 트윗 CRUD, 팔로우/언팔로우, 멘션, 댓글, 좋아요, 프로필 수정, 실시간 동기화  |
 
 ---
 
