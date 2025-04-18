@@ -21,6 +21,19 @@ Presentation → UseCase → Repository → Service → 외부 API/Firebase
 
 ![Architecture](./IMG_7096.png)
 
+### 📐 각 계층별 책임 요약
+
+| 계층 | 역할 | 핵심 내용 |
+|------|------|------------|
+| ViewController | UI 이벤트 처리 | Programmatic UI, ViewModel 바인딩, 사용자 액션 처리 |
+| ViewModel | 상태 관리 및 로직 중계 | 클로저 바인딩, UseCase 호출, UI 데이터 가공 |
+| UseCase | 도메인 로직 처리 | SRP 기반 기능 처리, Repository 호출 |
+| Repository | 외부 데이터 가공 | Firebase 통신, 도메인 모델 변환 및 전달 |
+| Service | 외부 API 통신 | Firebase 등 외부 서비스와 직접 통신, 데이터 응답 처리 |
+| Model / Entity | 데이터 구조 정의 | 도메인 기반 데이터 모델 정의 및 ViewModel 전달용 가공 |
+| Router | 화면 전환 | DI 기반 화면 이동 처리, ViewController 생성 관리 |
+| DIContainer | 의존성 주입 | 모든 계층에 필요한 객체 주입 및 팩토리 메서드 제공 |
+
 
 ### ✅ MVVM 기반 UI 설계
 - ViewController는 UI 구성 및 이벤트 처리만 담당
